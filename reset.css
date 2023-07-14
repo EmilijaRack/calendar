@@ -1,0 +1,27 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: none;
+    font-family: "Google Sans",Roboto,Arial,sans-serif;
+    color: var(--on-surface);
+    background-color: var(--surface);
+    font-size: 14px;
+    
+}
+
+button:hover {
+    background-color: var(--chip-hover);
+}
+
+p {
+    background-color: inherit;
+}
+
+svg {
+    fill:  var(--on-surface);
+}
+
+ul, ol {   
+    list-style: none;
+}
