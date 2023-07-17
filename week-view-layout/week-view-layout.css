@@ -83,6 +83,7 @@
 
 .left-block {
     max-width: 240px;
+    margin-right: 20px;
 }
 
 .left-block__main {
@@ -154,8 +155,11 @@
 
 .week-days__cells {
     text-align: center;
-    width: calc(100% / 7);
+    width: 100%;
     padding-top: 8px;
+    display: grid;
+    align-self: center;
+    justify-content: center;
 }
 
 .week-days__cells--h1 {
@@ -172,53 +176,59 @@
     line-height: 24px;
 }
 
-.right-block__main {
-    height: 83vh;
+.main__calendar__body{
     overflow: scroll;
-    display: flex;
-}
-
-.right-block__main__calendar {
-    display: grid;
-    grid-template-columns: repeat(7, auto);
-    grid-template-rows: repeat(24, auto);
-    width: 100%;
-}
-
-.right-block__main__calendar__cells, .outer-border-horizontal__block__cell, .outer-border-vertical-block--small {
-    border-bottom: 1px solid var(--hairline);
-    border-right: 1px solid var(--hairline);
-}
-
-.right-block__main__calendar__cells, .outer-border-horizontal__block__cell {
-    min-height: 50px;
-}
-
-.outer-border-horizontal__block, .outer-border-vertical-block--small {
-    width: 8px;
-}
-
-.outer-border-horizontal__block {
     display: flex;
     flex-direction: column;
 }
 
-.outer-border-vertical {
-    display: flex;
-}
-
-.outer-border-vertical-block {
-    width: 100%;
-    height: 20px;
-    border-bottom: 1px solid var(--hairline); 
-    display: grid;
-    grid-template-columns: repeat(7, auto);
-}
-
-.outer-border-vertical__block__cell {
+.main-calendar__body__cells, .main-calendar__horizontal-block {
+    border-bottom: 1px solid var(--hairline);
     border-right: 1px solid var(--hairline);
 }
 
-.outer-border-vertical__block__cell:nth-last-child(-n+1) {
-    border: none;
+.main-calendar__body__cells {
+    min-height: 50px;
 }
+
+.main-calendar__vertical-block {
+    border-right: 1px solid var(--hairline);
+    height: 16px;
+}
+
+.timeline__cell {
+    display: flex;
+    font-size: 10px;
+    color: var(--on-surface-variant-agm);
+}
+
+.main-calendar {
+    width: 100%;
+}
+
+.main-calendar__header {
+    display: grid;
+    grid-template-columns: 42px 9px repeat(7, auto);
+    border-bottom: 1px solid var(--hairline);
+}
+
+.main-calendar__body {
+    display: grid;
+    grid-template-columns: 42px 9px repeat(7, auto);
+    height: 80vh;
+    overflow: scroll;
+}
+
+.timeline__cell--flex-end {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.timeline__cell p {
+    font-size: 10px;
+    color: var(--on-surface-variant-agm);
+    position: relative;
+    top: 45px;
+}
+

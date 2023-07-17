@@ -10,10 +10,6 @@
     
 }
 
-:root {
-    height: 98vh;
-}
-
 button:hover {
     background-color: var(--chip-hover);
 }
