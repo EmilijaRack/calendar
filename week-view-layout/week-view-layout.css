@@ -9,11 +9,14 @@
 
 body {
     height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .main-block {
     display: flex;
-    height: calc(100% - 65px);
+    flex-basis: 0;
+    flex-grow: 1;
 }
 
 .header__block {
