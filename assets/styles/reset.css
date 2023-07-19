@@ -10,6 +10,10 @@
     
 }
 
+button, select {
+    cursor: pointer;
+}
+
 button:hover {
     background-color: var(--chip-hover);
 }
@@ -25,3 +29,13 @@ svg {
 ul, ol {   
     list-style: none;
 }
+
+select:focus, input:focus {
+    outline: none;
+}
+
+em {
+    font-style: normal;
+    background-color: inherit;
+}
+

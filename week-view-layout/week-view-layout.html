@@ -5,11 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WixPress - Calendar</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
     <link rel="stylesheet" type="text/css" href="week-view-layout.css">
-    <link rel="stylesheet" type="text/css" href="/reset.css">
-    <link rel="stylesheet" type="text/css" href="/variables.css">
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <link rel="stylesheet" type="text/css" href="../event-modal-layout/event-modal-layout.css">
+    <link rel="stylesheet" type="text/css" href="../assets/styles/reset.css">
+    <link rel="stylesheet" type="text/css" href="../assets/styles/variables.css">
+    <script src="../script.js" defer></script>
 </head>
 
 <body>
@@ -122,6 +123,109 @@
                 </section>
             </section>
         </section>
+        <section class="event-modal">
+            <form class="event-form" onsubmit="return false">
+                <section class="form-header">
+                    <button class="material-symbols-outlined" onclick="closeModal()">
+                        close
+                    </button>
+                </section>
+                <section class="form-body">
+                    <span class="form-body__icons"></span>
+                    <input type="text" placeholder="Add title" class="form-body__add-item">
+                    <span class="form-body__icons"></span>
+                    <div class="form-body__btn-list">
+                        <button class="event-btn">Event</button>
+                        <button class="simple-btn">
+                            Focus time
+                            <span class="list-btn__new-item">NEW</span>
+                        </button>
+                        <button class="simple-btn">Out of office</button>
+                        <button class="simple-btn">
+                            Working location
+                            <span class="list-btn__new-item">NEW</span>
+                        </button>
+                        <button class="simple-btn">Task</button>
+                        <button class="simple-btn">Appointment schedule</button>
+                    </div>
+                    <span class="form-body__icons material-symbols-outlined">
+                        access_time
+                    </span>
+                    <div><input type="datetime-local" class="simple-btn"></div>
+                    <span class="form-body__icons"></span>
+                    <div class="form-body__day-timezone">
+                        <input type="checkbox" id="all-day">
+                        <label for="all-day">All day</label>
+                        <select name="timezone_offset" id="timezone-offset" class="simple-select--no-arrow">
+                            <option class="timezone">Time zone</option>
+                        </select>
+                    </div>
+                    <span class="form-body__icons"></span>
+                    <select class="simple-select--no-arrow">
+                        <option value="no-repeat">Does not repeat</option>
+                        <option value="daily">Daily</option>
+                        <option value="on-tuesday">Weekly on Tuesday</option>
+                        <option value="on-third-tuesday">Monthly on the third Tuesday</option>
+                        <option value="annually">Annually on July 18</option>
+                        <option value="every-weekday">Every weekday (Monday to Friday)</option>
+                        <option value="custom">Custom...</option>
+                    </select>
+                    <span class="form-body__icons"></span>
+                    <div>
+                        <button class="simple-btn">Find a time</button>
+                    </div>
+                    <span class="material-symbols-outlined">
+                        group
+                    </span>
+                    <input type="text" class="add-guests-location" placeholder="Add guests">
+                    <span class="material-symbols-outlined">
+                        meeting_room
+                    </span>
+                    <div>
+                        <select class="simple-select--blue">
+                            <option value="add">Add video conferencing</option>
+                            <option value="google-meet">Google Meet</option>
+                            <option value="zoom-meeting">Zoom Meeting</option>
+                        </select>
+                    </div>
+                    <span class="material-symbols-outlined">
+                        videocam
+                    </span>
+                    <div><button class="simple-btn">Add rooms</button></div>
+                    <span class="material-symbols-outlined">
+                        location_on
+                    </span>
+                    <input type="text" class="add-guests-location" placeholder="Add location">
+                    <span class="form-body__icons material-symbols-outlined">
+                        notes
+                    </span>
+                    <div>
+                        <button class="simple-btn">
+                            Add <em class="add-desc--underline">description</em> or <em
+                                class="add-desc--underline">attachments</em>
+                        </button>
+                    </div>
+                    <span class="material-symbols-outlined">
+                        event
+                    </span>
+                    <div>
+                        <button class="user-btn">
+                            <ul class="user-btn__username">
+                                <li>Emilija Rackauskaite</li>
+                                <li class="user-btn__username__circle"></li>
+                            </ul>
+                            <span class="user-btn__user-status">
+                                Busy • Default visibility • Notify 10 minutes before
+                            </span>
+                        </button>
+                    </div>
+                </section>
+                <section class="form-footer">
+                    <button class="more-options">More options</button>
+                    <button class="save">Save</button>
+                </section>
+            </form>
+        </section>
         <section class="main-calendar">
             <ul class="main-calendar__header">
                 <li class="timeline__cell timeline__cell--flex-end">GMT+03</li>
@@ -154,14 +258,6 @@
                     <p class="week-days__cells--p">SUN</p>
                     <button class="week-days__cells--h1">15</button>
                 </li>
-                <li class="main-calendar__vertical-block--small"></li>
-                <li class="main-calendar__vertical-block"></li>
-                <li class="main-calendar__vertical-block"></li>
-                <li class="main-calendar__vertical-block"></li>
-                <li class="main-calendar__vertical-block"></li>
-                <li class="main-calendar__vertical-block"></li>
-                <li class="main-calendar__vertical-block"></li>
-                <li class="main-calendar__vertical-block"></li>
             </ul>
             <ul class="main-calendar__body">
                 <li class="timeline__cell">
@@ -256,11 +352,19 @@
                     <p>9 AM</p>
                 </li>
                 <li class="main-calendar__horizontal-block"></li>
+                <li class="main-calendar__body__cells">
+                    <div class="event-data">
+                        <div class="event event-one">Busy, 8:00</div>
+                    </div>
+                </li>
                 <li class="main-calendar__body__cells"></li>
                 <li class="main-calendar__body__cells"></li>
                 <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
+                <li class="main-calendar__body__cells">
+                    <div class="event-data">
+                        <div class="event event-one event-one--top-25">Busy, 8:30</div>
+                    </div>
+                </li>
                 <li class="main-calendar__body__cells"></li>
                 <li class="main-calendar__body__cells"></li>
                 <li class="timeline__cell">
@@ -302,7 +406,12 @@
                 <li class="main-calendar__horizontal-block"></li>
                 <li class="main-calendar__body__cells"></li>
                 <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
+                <li class="main-calendar__body__cells">
+                    <div class="event-data">
+                        <div class="event event-first--100">Busy, 12:00</div>
+                        <div class="event event-second--50--middle">Busy, 12:30</div>
+                    </div>
+                </li>
                 <li class="main-calendar__body__cells"></li>
                 <li class="main-calendar__body__cells"></li>
                 <li class="main-calendar__body__cells"></li>
@@ -326,7 +435,12 @@
                 <li class="main-calendar__body__cells"></li>
                 <li class="main-calendar__body__cells"></li>
                 <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
+                <li class="main-calendar__body__cells">
+                    <div class="event-data">
+                        <div class="event event-first--200">Busy, 14:00</div>
+                        <div class="event event-second--50">Busy, 14:00</div>
+                    </div>
+                </li>
                 <li class="main-calendar__body__cells"></li>
                 <li class="main-calendar__body__cells"></li>
                 <li class="timeline__cell">
