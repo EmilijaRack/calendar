@@ -1,548 +1,550 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WixPress - Calendar</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
-    <link rel="stylesheet" type="text/css" href="week-view-layout.css">
-    <link rel="stylesheet" type="text/css" href="../event-modal-layout/event-modal-layout.css">
-    <link rel="stylesheet" type="text/css" href="../assets/styles/reset.css">
-    <link rel="stylesheet" type="text/css" href="../assets/styles/variables.css">
-    <script src="../script.js" defer></script>
-</head>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
+    />
+    <link rel="stylesheet" type="text/css" href="week-view-layout.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../event-modal-layout/event-modal-layout.css"
+    />
+    <link rel="stylesheet" type="text/css" href="../assets/styles/reset.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../assets/styles/variables.css"
+    />
+    <script src="../script.js" type="module" defer></script>
+  </head>
 
-<body>
+  <body>
     <header class="header">
-        <nav class="header__block header__block--margin">
-            <span class="header__block__hamburger-menu">
-                <svg focusable="false" viewBox="0 0 24 24" class="hamburger-menu">
-                    <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path>
-                </svg>
-            </span>
-            <span class="header__block__caption">
-                <h1 class="header__block__caption__h1">Calendar</h1>
-            </span>
-        </nav>
-        <nav class="header__block header__block--left">
-            <button class="btn-date btn-date--right-12">
-                <p class="btn-date__text">Today</p>
-            </button>
-            <span class="btn-arrow-wrapper">
-                <button class="btn-arrow material-symbols-outlined">
-                    chevron_left
-                </button>
-                <button class="btn-arrow material-symbols-outlined">
-                    chevron_right
-                </button>
-            </span>
-            <div class="header__block__caption">
-                <h1 class="header__block__caption__h1">July 2023</h1>
-            </div>
-        </nav>
-        <nav class="header__block">
-            <button class="btn-date btn-date--right-8">
-                <span class="btn-date__elem">
-                    <p class="btn-date__elem__text">Week</p>
-                    <span class="material-symbols-outlined">
-                        arrow_drop_down
-                    </span>
-                </span>
-            </button>
-        </nav>
+      <nav class="header__block header__block--margin">
+        <span class="header__block__hamburger-menu">
+          <svg focusable="false" viewBox="0 0 24 24" class="hamburger-menu">
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path>
+          </svg>
+        </span>
+        <span class="header__block__caption">
+          <h1 class="header__block__caption__h1">Calendar</h1>
+        </span>
+      </nav>
+      <nav class="header__block header__block--left">
+        <button class="btn-date btn-date--right-12">
+          <p class="btn-date__text">Today</p>
+        </button>
+        <span class="btn-arrow-wrapper">
+          <button class="btn-arrow material-symbols-outlined">
+            chevron_left
+          </button>
+          <button class="btn-arrow material-symbols-outlined">
+            chevron_right
+          </button>
+        </span>
+        <div class="header__block__caption">
+          <h1 class="header__block__caption__h1">July 2023</h1>
+        </div>
+      </nav>
+      <nav class="header__block">
+        <button class="btn-date btn-date--right-8">
+          <span class="btn-date__elem">
+            <p class="btn-date__elem__text">Week</p>
+            <span class="material-symbols-outlined"> arrow_drop_down </span>
+          </span>
+        </button>
+      </nav>
     </header>
     <main class="main-block">
-        <section class="left-block">
-            <section class="left-block__header">
-                <button class="btn-event">Create Event</button>
-            </section>
-            <section class="left-block__main">
-                <section class="calendar-header">
-                    <p class="current-date">July 14</p>
-                    <span class="btn-arrow-wrapper">
-                        <button class="btn-arrow material-symbols-outlined">
-                            chevron_left
-                        </button>
-                        <button class="btn-arrow material-symbols-outlined">
-                            chevron_right
-                        </button>
-                    </span>
-                </section>
-                <section class="calendar-dates">
-                    <ul class="calendar-dates__cells">
-                        <li class="calendar-dates__cell--gray">M</li>
-                        <li class="calendar-dates__cell--gray">T</li>
-                        <li class="calendar-dates__cell--gray">W</li>
-                        <li class="calendar-dates__cell--gray">T</li>
-                        <li class="calendar-dates__cell--gray">S</li>
-                        <li class="calendar-dates__cell--gray">S</li>
-                        <li class="calendar-dates__cell--gray">26</li>
-                        <li class="calendar-dates__cell--gray">27</li>
-                        <li class="calendar-dates__cell--gray">28</li>
-                        <li class="calendar-dates__cell--gray">29</li>
-                        <li class="calendar-dates__cell--gray">30</li>
-                        <li>1</li>
-                        <li>2</li>
-                        <li>3</li>
-                        <li>4</li>
-                        <li>5</li>
-                        <li>6</li>
-                        <li>7</li>
-                        <li>8</li>
-                        <li>9</li>
-                        <li>10</li>
-                        <li>11</li>
-                        <li>12</li>
-                        <li>13</li>
-                        <li>14</li>
-                        <li>15</li>
-                        <li>16</li>
-                        <li>17</li>
-                        <li>18</li>
-                        <li>19</li>
-                        <li>20</li>
-                        <li>21</li>
-                        <li>22</li>
-                        <li>23</li>
-                        <li>24</li>
-                        <li>25</li>
-                        <li>26</li>
-                        <li>27</li>
-                        <li>28</li>
-                        <li>29</li>
-                        <li>30</li>
-                        <li>31</li>
-                        <li class="calendar-dates__cell--gray">1</li>
-                        <li class="calendar-dates__cell--gray">2</li>
-                        <li class="calendar-dates__cell--gray">3</li>
-                        <li class="calendar-dates__cell--gray">4</li>
-                        <li class="calendar-dates__cell--gray">5</li>
-                        <li class="calendar-dates__cell--gray">6</li>
-                    </ul>
-                </section>
-            </section>
+      <section class="left-block">
+        <section class="left-block__header">
+          <button class="btn-event">Create Event</button>
         </section>
-        <section class="event-modal">
-            <form class="event-form" onsubmit="return false">
-                <section class="form-header">
-                    <button class="material-symbols-outlined" onclick="closeModal()">
-                        close
-                    </button>
-                </section>
-                <section class="form-body">
-                    <span class="form-body__icons"></span>
-                    <input type="text" placeholder="Add title" class="form-body__add-item">
-                    <span class="form-body__icons"></span>
-                    <div class="form-body__btn-list">
-                        <button class="event-btn">Event</button>
-                        <button class="simple-btn">
-                            Focus time
-                            <span class="list-btn__new-item">NEW</span>
-                        </button>
-                        <button class="simple-btn">Out of office</button>
-                        <button class="simple-btn">
-                            Working location
-                            <span class="list-btn__new-item">NEW</span>
-                        </button>
-                        <button class="simple-btn">Task</button>
-                        <button class="simple-btn">Appointment schedule</button>
-                    </div>
-                    <span class="form-body__icons material-symbols-outlined">
-                        access_time
-                    </span>
-                    <div><input type="datetime-local" class="simple-btn"></div>
-                    <span class="form-body__icons"></span>
-                    <div class="form-body__day-timezone">
-                        <input type="checkbox" id="all-day">
-                        <label for="all-day">All day</label>
-                        <select name="timezone_offset" id="timezone-offset" class="simple-select--no-arrow">
-                            <option class="timezone">Time zone</option>
-                        </select>
-                    </div>
-                    <span class="form-body__icons"></span>
-                    <select class="simple-select--no-arrow">
-                        <option value="no-repeat">Does not repeat</option>
-                        <option value="daily">Daily</option>
-                        <option value="on-tuesday">Weekly on Tuesday</option>
-                        <option value="on-third-tuesday">Monthly on the third Tuesday</option>
-                        <option value="annually">Annually on July 18</option>
-                        <option value="every-weekday">Every weekday (Monday to Friday)</option>
-                        <option value="custom">Custom...</option>
-                    </select>
-                    <span class="form-body__icons"></span>
-                    <div>
-                        <button class="simple-btn">Find a time</button>
-                    </div>
-                    <span class="material-symbols-outlined">
-                        group
-                    </span>
-                    <input type="text" class="add-guests-location" placeholder="Add guests">
-                    <span class="material-symbols-outlined">
-                        meeting_room
-                    </span>
-                    <div>
-                        <select class="simple-select--blue">
-                            <option value="add">Add video conferencing</option>
-                            <option value="google-meet">Google Meet</option>
-                            <option value="zoom-meeting">Zoom Meeting</option>
-                        </select>
-                    </div>
-                    <span class="material-symbols-outlined">
-                        videocam
-                    </span>
-                    <div><button class="simple-btn">Add rooms</button></div>
-                    <span class="material-symbols-outlined">
-                        location_on
-                    </span>
-                    <input type="text" class="add-guests-location" placeholder="Add location">
-                    <span class="form-body__icons material-symbols-outlined">
-                        notes
-                    </span>
-                    <div>
-                        <button class="simple-btn">
-                            Add <em class="add-desc--underline">description</em> or <em
-                                class="add-desc--underline">attachments</em>
-                        </button>
-                    </div>
-                    <span class="material-symbols-outlined">
-                        event
-                    </span>
-                    <div>
-                        <button class="user-btn">
-                            <ul class="user-btn__username">
-                                <li>Emilija Rackauskaite</li>
-                                <li class="user-btn__username__circle"></li>
-                            </ul>
-                            <span class="user-btn__user-status">
-                                Busy • Default visibility • Notify 10 minutes before
-                            </span>
-                        </button>
-                    </div>
-                </section>
-                <section class="form-footer">
-                    <button class="more-options">More options</button>
-                    <button class="save">Save</button>
-                </section>
-            </form>
-        </section>
-        <section class="main-calendar">
-            <ul class="main-calendar__header">
-                <li class="timeline__cell timeline__cell--flex-end">GMT+03</li>
-                <li class="main-calendar__vertical-block--small"></li>
-                <li class="week-days__cells">
-                    <p class="week-days__cells--p">MON</p>
-                    <button class="week-days__cells--h1">9</button>
-                </li>
-                <li class="week-days__cells">
-                    <p class="week-days__cells--p">TUE</p>
-                    <button class="week-days__cells--h1">10</button>
-                </li>
-                <li class="week-days__cells">
-                    <p class="week-days__cells--p">WED</p>
-                    <button class="week-days__cells--h1">11</button>
-                </li>
-                <li class="week-days__cells">
-                    <p class="week-days__cells--p">THU</p>
-                    <button class="week-days__cells--h1">12</button>
-                </li>
-                <li class="week-days__cells">
-                    <p class="week-days__cells--p">FRI</p>
-                    <button class="week-days__cells--h1">13</button>
-                </li>
-                <li class="week-days__cells">
-                    <p class="week-days__cells--p">SAT</p>
-                    <button class="week-days__cells--h1">14</button>
-                </li>
-                <li class="week-days__cells">
-                    <p class="week-days__cells--p">SUN</p>
-                    <button class="week-days__cells--h1">15</button>
-                </li>
+        <section class="left-block__main">
+          <section class="calendar-header">
+            <p class="current-date">July 14</p>
+            <span class="btn-arrow-wrapper">
+              <button class="btn-arrow material-symbols-outlined">
+                chevron_left
+              </button>
+              <button class="btn-arrow material-symbols-outlined">
+                chevron_right
+              </button>
+            </span>
+          </section>
+          <section class="calendar-dates">
+            <ul class="calendar-dates__cells">
+              <li class="calendar-dates__cell--gray">M</li>
+              <li class="calendar-dates__cell--gray">T</li>
+              <li class="calendar-dates__cell--gray">W</li>
+              <li class="calendar-dates__cell--gray">T</li>
+              <li class="calendar-dates__cell--gray">S</li>
+              <li class="calendar-dates__cell--gray">S</li>
+              <li class="calendar-dates__cell--gray">26</li>
+              <li class="calendar-dates__cell--gray">27</li>
+              <li class="calendar-dates__cell--gray">28</li>
+              <li class="calendar-dates__cell--gray">29</li>
+              <li class="calendar-dates__cell--gray">30</li>
+              <li>1</li>
+              <li>2</li>
+              <li>3</li>
+              <li>4</li>
+              <li>5</li>
+              <li>6</li>
+              <li>7</li>
+              <li>8</li>
+              <li>9</li>
+              <li>10</li>
+              <li>11</li>
+              <li>12</li>
+              <li>13</li>
+              <li>14</li>
+              <li>15</li>
+              <li>16</li>
+              <li>17</li>
+              <li>18</li>
+              <li>19</li>
+              <li>20</li>
+              <li>21</li>
+              <li>22</li>
+              <li>23</li>
+              <li>24</li>
+              <li>25</li>
+              <li>26</li>
+              <li>27</li>
+              <li>28</li>
+              <li>29</li>
+              <li>30</li>
+              <li>31</li>
+              <li class="calendar-dates__cell--gray">1</li>
+              <li class="calendar-dates__cell--gray">2</li>
+              <li class="calendar-dates__cell--gray">3</li>
+              <li class="calendar-dates__cell--gray">4</li>
+              <li class="calendar-dates__cell--gray">5</li>
+              <li class="calendar-dates__cell--gray">6</li>
             </ul>
-            <ul class="main-calendar__body">
-                <li class="timeline__cell">
-                    <p>1 AM</p>
-                </li>
-                <li class="main-calendar__horizontal-block"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="timeline__cell">
-                    <p>2 AM</p>
-                </li>
-                <li class="main-calendar__horizontal-block"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="timeline__cell">
-                    <p>3 AM</p>
-                </li>
-                <li class="main-calendar__horizontal-block"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="timeline__cell">
-                    <p>4 AM</p>
-                </li>
-                <li class="main-calendar__horizontal-block"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="timeline__cell">
-                    <p>5 AM</p>
-                </li>
-                <li class="main-calendar__horizontal-block"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="timeline__cell">
-                    <p>6 AM</p>
-                </li>
-                <li class="main-calendar__horizontal-block"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="timeline__cell">
-                    <p>7 AM</p>
-                </li>
-                <li class="main-calendar__horizontal-block"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="timeline__cell">
-                    <p>8 AM</p>
-                </li>
-                <li class="main-calendar__horizontal-block"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="timeline__cell">
-                    <p>9 AM</p>
-                </li>
-                <li class="main-calendar__horizontal-block"></li>
-                <li class="main-calendar__body__cells">
-                    <div class="event-data">
-                        <div class="event event-one">Busy, 8:00</div>
-                    </div>
-                </li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells">
-                    <div class="event-data">
-                        <div class="event event-one event-one--top-25">Busy, 8:30</div>
-                    </div>
-                </li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="timeline__cell">
-                    <p>10 AM</p>
-                </li>
-                <li class="main-calendar__horizontal-block"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="timeline__cell">
-                    <p>11 AM</p>
-                </li>
-                <li class="main-calendar__horizontal-block"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="timeline__cell">
-                    <p>12 PM</p>
-                </li>
-                <li class="main-calendar__horizontal-block"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="timeline__cell">
-                    <p>1 PM</p>
-                </li>
-                <li class="main-calendar__horizontal-block"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells">
-                    <div class="event-data">
-                        <div class="event event-first--100">Busy, 12:00</div>
-                        <div class="event event-second--50--middle">Busy, 12:30</div>
-                    </div>
-                </li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="timeline__cell">
-                    <p>2 PM</p>
-                </li>
-                <li class="main-calendar__horizontal-block"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="timeline__cell">
-                    <p>3 PM</p>
-                </li>
-                <li class="main-calendar__horizontal-block"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells">
-                    <div class="event-data">
-                        <div class="event event-first--200">Busy, 14:00</div>
-                        <div class="event event-second--50">Busy, 14:00</div>
-                    </div>
-                </li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="timeline__cell">
-                    <p>4 PM</p>
-                </li>
-                <li class="main-calendar__horizontal-block"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="timeline__cell">
-                    <p>5 PM</p>
-                </li>
-                <li class="main-calendar__horizontal-block"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="timeline__cell">
-                    <p>6 PM</p>
-                </li>
-                <li class="main-calendar__horizontal-block"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="timeline__cell">
-                    <p>7 PM</p>
-                </li>
-                <li class="main-calendar__horizontal-block"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="timeline__cell">
-                    <p>8 PM</p>
-                </li>
-                <li class="main-calendar__horizontal-block"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="timeline__cell">
-                    <p>9 PM</p>
-                </li>
-                <li class="main-calendar__horizontal-block"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="timeline__cell">
-                    <p>10 PM</p>
-                </li>
-                <li class="main-calendar__horizontal-block"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="timeline__cell">
-                    <p>11 PM</p>
-                </li>
-                <li class="main-calendar__horizontal-block"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="timeline__cell"></li>
-                <li class="main-calendar__horizontal-block"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-                <li class="main-calendar__body__cells"></li>
-            </ul>
+          </section>
         </section>
+      </section>
+      <section class="event-modal">
+        <form class="event-form" onsubmit="return false">
+          <section class="form-header">
+            <button class="material-symbols-outlined close-btn">close</button>
+          </section>
+          <section class="form-body">
+            <span class="form-body__icons"></span>
+            <input
+              type="text"
+              placeholder="Add title"
+              class="form-body__add-item"
+            />
+            <span class="form-body__icons"></span>
+            <div class="form-body__btn-list">
+              <button class="event-btn">Event</button>
+              <button class="simple-btn">
+                Focus time
+                <span class="list-btn__new-item">NEW</span>
+              </button>
+              <button class="simple-btn">Out of office</button>
+              <button class="simple-btn">
+                Working location
+                <span class="list-btn__new-item">NEW</span>
+              </button>
+              <button class="simple-btn">Task</button>
+              <button class="simple-btn">Appointment schedule</button>
+            </div>
+            <span class="form-body__icons material-symbols-outlined">
+              access_time
+            </span>
+            <div>
+              <input
+                type="datetime-local"
+                class="simple-btn start-time"
+              /><input type="datetime-local" class="simple-btn end-time" />
+            </div>
+            <span class="form-body__icons"></span>
+            <div class="form-body__day-timezone">
+              <input type="checkbox" id="all-day" />
+              <label for="all-day">All day</label>
+              <select
+                name="timezone_offset"
+                id="timezone-offset"
+                class="simple-select--no-arrow"
+              >
+                <option class="timezone">Time zone</option>
+              </select>
+            </div>
+            <span class="form-body__icons"></span>
+            <select class="simple-select--no-arrow">
+              <option value="no-repeat">Does not repeat</option>
+              <option value="daily">Daily</option>
+              <option value="on-tuesday">Weekly on Tuesday</option>
+              <option value="on-third-tuesday">
+                Monthly on the third Tuesday
+              </option>
+              <option value="annually">Annually on July 18</option>
+              <option value="every-weekday">
+                Every weekday (Monday to Friday)
+              </option>
+              <option value="custom">Custom...</option>
+            </select>
+            <span class="form-body__icons"></span>
+            <div>
+              <button class="simple-btn">Find a time</button>
+            </div>
+            <span class="material-symbols-outlined"> group </span>
+            <input
+              type="text"
+              class="add-guests-location"
+              placeholder="Add guests"
+            />
+            <span class="material-symbols-outlined"> meeting_room </span>
+            <div>
+              <select class="simple-select--blue">
+                <option value="add">Add video conferencing</option>
+                <option value="google-meet">Google Meet</option>
+                <option value="zoom-meeting">Zoom Meeting</option>
+              </select>
+            </div>
+            <span class="material-symbols-outlined"> videocam </span>
+            <div><button class="simple-btn">Add rooms</button></div>
+            <span class="material-symbols-outlined"> location_on </span>
+            <input
+              type="text"
+              class="add-guests-location"
+              placeholder="Add location"
+            />
+            <span class="form-body__icons material-symbols-outlined">
+              notes
+            </span>
+            <div>
+              <button class="simple-btn">
+                Add <em class="add-desc--underline">description</em> or
+                <em class="add-desc--underline">attachments</em>
+              </button>
+            </div>
+            <span class="material-symbols-outlined"> event </span>
+            <div>
+              <button class="user-btn">
+                <ul class="user-btn__username">
+                  <li>Emilija Rackauskaite</li>
+                  <li class="user-btn__username__circle"></li>
+                </ul>
+                <span class="user-btn__user-status">
+                  Busy • Default visibility • Notify 10 minutes before
+                </span>
+              </button>
+            </div>
+          </section>
+          <section class="form-footer">
+            <button class="more-options">More options</button>
+            <button class="save">Save</button>
+          </section>
+        </form>
+      </section>
+      <section class="main-calendar">
+        <ul class="main-calendar__header">
+          <li class="timeline__cell timeline__cell--flex-end">GMT+03</li>
+          <li class="main-calendar__vertical-block--small"></li>
+          <li class="week-days__cells">
+            <p class="week-days__cells--p">MON</p>
+            <button class="week-days__cells--h1">9</button>
+          </li>
+          <li class="week-days__cells">
+            <p class="week-days__cells--p">TUE</p>
+            <button class="week-days__cells--h1">10</button>
+          </li>
+          <li class="week-days__cells">
+            <p class="week-days__cells--p">WED</p>
+            <button class="week-days__cells--h1">11</button>
+          </li>
+          <li class="week-days__cells">
+            <p class="week-days__cells--p">THU</p>
+            <button class="week-days__cells--h1">12</button>
+          </li>
+          <li class="week-days__cells">
+            <p class="week-days__cells--p">FRI</p>
+            <button class="week-days__cells--h1">13</button>
+          </li>
+          <li class="week-days__cells">
+            <p class="week-days__cells--p">SAT</p>
+            <button class="week-days__cells--h1">14</button>
+          </li>
+          <li class="week-days__cells">
+            <p class="week-days__cells--p">SUN</p>
+            <button class="week-days__cells--h1">15</button>
+          </li>
+        </ul>
+        <ul class="main-calendar__body">
+          <li class="timeline__cell">
+            <p>1 AM</p>
+          </li>
+          <li class="main-calendar__horizontal-block"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="timeline__cell">
+            <p>2 AM</p>
+          </li>
+          <li class="main-calendar__horizontal-block"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="timeline__cell">
+            <p>3 AM</p>
+          </li>
+          <li class="main-calendar__horizontal-block"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="timeline__cell">
+            <p>4 AM</p>
+          </li>
+          <li class="main-calendar__horizontal-block"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="timeline__cell">
+            <p>5 AM</p>
+          </li>
+          <li class="main-calendar__horizontal-block"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="timeline__cell">
+            <p>6 AM</p>
+          </li>
+          <li class="main-calendar__horizontal-block"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="timeline__cell">
+            <p>7 AM</p>
+          </li>
+          <li class="main-calendar__horizontal-block"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="timeline__cell">
+            <p>8 AM</p>
+          </li>
+          <li class="main-calendar__horizontal-block"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="timeline__cell">
+            <p>9 AM</p>
+          </li>
+          <li class="main-calendar__horizontal-block"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="timeline__cell">
+            <p>10 AM</p>
+          </li>
+          <li class="main-calendar__horizontal-block"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="timeline__cell">
+            <p>11 AM</p>
+          </li>
+          <li class="main-calendar__horizontal-block"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="timeline__cell">
+            <p>12 PM</p>
+          </li>
+          <li class="main-calendar__horizontal-block"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="timeline__cell">
+            <p>1 PM</p>
+          </li>
+          <li class="main-calendar__horizontal-block"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="timeline__cell">
+            <p>2 PM</p>
+          </li>
+          <li class="main-calendar__horizontal-block"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="timeline__cell">
+            <p>3 PM</p>
+          </li>
+          <li class="main-calendar__horizontal-block"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="timeline__cell">
+            <p>4 PM</p>
+          </li>
+          <li class="main-calendar__horizontal-block"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="timeline__cell">
+            <p>5 PM</p>
+          </li>
+          <li class="main-calendar__horizontal-block"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="timeline__cell">
+            <p>6 PM</p>
+          </li>
+          <li class="main-calendar__horizontal-block"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="timeline__cell">
+            <p>7 PM</p>
+          </li>
+          <li class="main-calendar__horizontal-block"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="timeline__cell">
+            <p>8 PM</p>
+          </li>
+          <li class="main-calendar__horizontal-block"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="timeline__cell">
+            <p>9 PM</p>
+          </li>
+          <li class="main-calendar__horizontal-block"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="timeline__cell">
+            <p>10 PM</p>
+          </li>
+          <li class="main-calendar__horizontal-block"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="timeline__cell">
+            <p>11 PM</p>
+          </li>
+          <li class="main-calendar__horizontal-block"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="timeline__cell"></li>
+          <li class="main-calendar__horizontal-block"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+          <li class="main-calendar__body__cells"></li>
+        </ul>
+      </section>
     </main>
-</body>
-
+  </body>
 </html>
