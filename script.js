@@ -1,4 +1,4 @@
-import { Event } from "./eventModal.js";
+import { Event } from "./event.js";
 
 const modalContainer = document.getElementsByClassName("event-modal")[0];
 const openModalButton = document.getElementsByClassName("btn-event")[0];
