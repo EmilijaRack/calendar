@@ -2,12 +2,12 @@ import { Event } from "./event.js";
 import { EventModal } from "./eventModal.js";
 import { Renderer } from "./renderer.js";
 
-const modalContainer = document.getElementsByClassName("event-modal")[0];
-const openModalButton = document.getElementsByClassName("btn-event")[0];
-const todayButton = document.getElementsByClassName("btn-date")[0];
+const root = document.querySelector("#root");
+const modalContainer = document.querySelector("#event-modal");
+const openModalButton = document.querySelector(".btn-event");
+const todayButton = document.querySelector(".btn-date");
 const closeModalButton = document.querySelector(".close-btn");
-const state = {};
-const eventModal = new EventModal();
+const eventModal = new EventModal(modalContainer);
 
 openModalButton.addEventListener("click", (event) => {
   event.stopPropagation();
@@ -15,9 +15,10 @@ openModalButton.addEventListener("click", (event) => {
 });
 
 eventModal.onSave((event) => {
-  console.log(event);
-  const renderer = new Renderer();
+  const renderer = new Renderer(root);
   renderer.renderEvent(event);
+  eventModal.close();
+  state.saveEvents(event);
 });
 
 closeModalButton.addEventListener("click", () => {
@@ -36,3 +37,14 @@ document.addEventListener("click", (event) => {
 todayButton.addEventListener("click", (event) => {
   event.stopPropagation();
 });
+
+class State {
+  constructor() {
+    this.currenTime = Date.now();
+    this.events = [];
+  }
+  saveEvents(event) {
+    this.events.push(event);
+  }
+}
+const state = new State();
