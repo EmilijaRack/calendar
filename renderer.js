@@ -1,17 +1,15 @@
 const CELL_HEIGHT = 50;
-let cellArray = new Array(24).fill(0).map(() => {
-  return new Array(7);
-});
-window.addEventListener("load", (event) => {
-    for (let i = 0; i < 24; i++) {
-      for (let j = 0; j < 7; j++) {
-      cellArray[i][j] = calendarCells[i * 7 + j];
-      }
-    }
-});
 
 export class Renderer {
-  constructor() {}
+  constructor(root) {
+    this.calendarCells = root.querySelectorAll(".main-calendar__body__cells");
+    this.cellArray = new Array(24).fill(0).map(() => new Array(7));
+    for (let i = 0; i < 24; i++) {
+      for (let j = 0; j < 7; j++) {
+        this.cellArray[i][j] = this.calendarCells[i * 7 + j];
+      }
+    }
+  }
   renderEvent(event) {
     const eventDataContainer = document.createElement("div");
     eventDataContainer.setAttribute("class", "event");
