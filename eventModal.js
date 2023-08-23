@@ -61,20 +61,18 @@ export class EventModal {
   }
 
   handleFormErrors() {
-    if (this.isTitleCorrect()) {
-      return;
+    if (!this.isTitleCorrect()) {
+      this.eventTitle.classList.add("noTitleError");
+      this.titleErrorMsg.innerText = "Please, add a Title";
+      this.eventTitle.after(this.titleErrorMsg);
     }
-    this.eventTitle.classList.add("noTitleError");
-    this.titleErrorMsg.innerText = "Please, add a Title";
-    this.eventTitle.after(this.titleErrorMsg);
 
-    if (this.isTimeCorrect()) {
-      return;
+    if (!this.isTimeCorrect()) {
+      this.endTime.classList.add("endDateError");
+      this.dateErrorMsg.innerHTML =
+        "The end-date should be later than start-date";
+      this.endTime.after(this.dateErrorMsg);
     }
-    this.endTime.classList.add("endDateError");
-    this.dateErrorMsg.innerHTML =
-      "The end-date should be later than start-date";
-    this.endTime.after(this.dateErrorMsg);
   }
 
   isTitleCorrect() {
