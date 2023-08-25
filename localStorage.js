@@ -1,4 +1,4 @@
-function createCalendarAPI(config) {
+export function createCalendarAPI(config) {
   const delay = config.delay;
 
   const getRandomDelay = () => {
