@@ -18,8 +18,9 @@ export class Renderer {
   }
 
   renderEvent(event) {
-    this.eventDataContainer.setAttribute("class", "event");
-    this.eventDataContainer.innerText = `${
+    const eventDataContainer = document.createElement("div");
+    eventDataContainer.setAttribute("class", "event");
+    eventDataContainer.innerText = `${
       event.title
     }, ${event.startDate.getHours()}:${
       event.startDate.getMinutes() < 10
@@ -32,38 +33,55 @@ export class Renderer {
     }`;
     this.cellArray[event.startDate.getHours()][
       event.startDate.getDay()
-    ].appendChild(this.eventDataContainer);
-    this.calcEventLength(event);
+    ].appendChild(eventDataContainer);
+    this.calcEventLength(event, eventDataContainer);
   }
 
-  calcEventLength(event) {
+  setEventStyles(eventDataContainer, key, value) {
+    eventDataContainer.style[key] = value + "px";
+  }
+
+  calcEventLength(event, eventDataContainer) {
     const eventLength = (event.endDate - event.startDate) / (1000 * 60 * 60);
-    const dayFitLength = HOURS_IN_A_DAY - event.startDate.getHours();
     const offSet = (CELL_HEIGHT * event.startDate.getMinutes()) / 60;
     const fullEventHeight = CELL_HEIGHT * eventLength;
+    let temp = fullEventHeight;
     const eventDaysLength = Math.floor(eventLength / HOURS_IN_A_DAY);
+    const eventStartLength =
+      HOURS_IN_A_DAY -
+      ((event.startDate.getHours() * 60 + event.startDate.getMinutes()) *
+        60 *
+        1000) /
+        (1000 * 60 * 60);
     const previousHeight =
-      (dayFitLength * FULL_DAY_LENGTH) / HOURS_IN_A_DAY - offSet;
+      (eventStartLength * FULL_DAY_LENGTH) / HOURS_IN_A_DAY;
 
-    this.eventDataContainer.style.top = offSet + "px";
+    this.setEventStyles(eventDataContainer, "top", offSet);
 
-    if (eventLength <= dayFitLength) {
-      this.eventDataContainer.style.height = fullEventHeight + "px";
+    if (eventLength <= eventStartLength) {
+      this.setEventStyles(eventDataContainer, "height", fullEventHeight);
       return;
     }
-    this.eventDataContainer.style.height = previousHeight + "px";
-    for (let i = 1; i <= eventDaysLength; i++) {
+
+    this.setEventStyles(eventDataContainer, "height", previousHeight);
+    for (let i = 0; i <= eventDaysLength; i++) {
       const eventDataContainerNextDay = document.createElement("div");
       eventDataContainerNextDay.setAttribute("class", "event");
-      this.cellArray[0][event.startDate.getDay() + i].appendChild(
-        eventDataContainerNextDay
-      );
-      if (i === eventDaysLength) {
-        eventDataContainerNextDay.style.height =
-          FULL_DAY_LENGTH - previousHeight + offSet + "px";
+      if (event.startDate.getDay() + i + 1 != DAYS_IN_A_WEEK) {
+        this.cellArray[0][event.startDate.getDay() + i + 1].appendChild(
+          eventDataContainerNextDay
+        );
+      }
+      temp -= FULL_DAY_LENGTH;
+      if (temp - FULL_DAY_LENGTH < 0) {
+        this.setEventStyles(
+          eventDataContainerNextDay,
+          "height",
+          fullEventHeight - previousHeight
+        );
         return;
       }
-      eventDataContainerNextDay.style.height = FULL_DAY_LENGTH + "px";
+      this.setEventStyles(eventDataContainer, "height", FULL_DAY_LENGTH);
     }
   }
 }
