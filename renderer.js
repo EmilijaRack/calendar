@@ -1,5 +1,4 @@
 const CELL_HEIGHT = 50;
-const FULL_DAY_LENGTH = 1200;
 const HOURS_IN_A_DAY = 24;
 const DAYS_IN_A_WEEK = 7;
 
@@ -18,70 +17,36 @@ export class Renderer {
   }
 
   renderEvent(event) {
-    const eventDataContainer = document.createElement("div");
-    eventDataContainer.setAttribute("class", "event");
-    eventDataContainer.innerText = `${
-      event.title
-    }, ${event.startDate.getHours()}:${
-      event.startDate.getMinutes() < 10
-        ? "0" + event.startDate.getMinutes()
-        : "" + event.startDate.getMinutes()
-    } - ${event.endDate.getHours()}:${
-      event.endDate.getMinutes() < 10
-        ? "0" + event.endDate.getMinutes()
-        : "" + event.endDate.getMinutes()
-    }`;
-    this.cellArray[event.startDate.getHours()][
-      event.startDate.getDay()
-    ].appendChild(eventDataContainer);
-    this.calcEventLength(event, eventDataContainer);
+    for (let [start, end] of this.calcEventLengthInDays(event)) {
+      const eventDataContainer = document.createElement("div");
+      eventDataContainer.setAttribute("class", "event");
+      eventDataContainer.innerText = `${event.title}, ${event.startDate
+        .toTimeString()
+        .slice(0, 5)} - ${event.endDate.toTimeString().slice(0, 5)}`;
+      this.setEventStyles(start, end, eventDataContainer);
+      this.cellArray[start.getHours()][start.getDay()].appendChild(
+        eventDataContainer
+      );
+    }
   }
 
-  setEventStyles(eventDataContainer, key, value) {
-    eventDataContainer.style[key] = value + "px";
+  setEventStyles(startDate, endDate, eventDataContainer) {
+    eventDataContainer.style.top =
+      (CELL_HEIGHT * startDate.getMinutes()) / 60 + "px";
+    eventDataContainer.style.height =
+      ((endDate - startDate) / (1000 * 60 * 60)) * CELL_HEIGHT + "px";
   }
 
-  calcEventLength(event, eventDataContainer) {
-    const eventLength = (event.endDate - event.startDate) / (1000 * 60 * 60);
-    const offSet = (CELL_HEIGHT * event.startDate.getMinutes()) / 60;
-    const fullEventHeight = CELL_HEIGHT * eventLength;
-    let temp = fullEventHeight;
-    const eventDaysLength = Math.floor(eventLength / HOURS_IN_A_DAY);
-    const eventStartLength =
-      HOURS_IN_A_DAY -
-      ((event.startDate.getHours() * 60 + event.startDate.getMinutes()) *
-        60 *
-        1000) /
-        (1000 * 60 * 60);
-    const previousHeight =
-      (eventStartLength * FULL_DAY_LENGTH) / HOURS_IN_A_DAY;
-
-    this.setEventStyles(eventDataContainer, "top", offSet);
-
-    if (eventLength <= eventStartLength) {
-      this.setEventStyles(eventDataContainer, "height", fullEventHeight);
-      return;
+  calcEventLengthInDays({ startDate, endDate }) {
+    const result = [];
+    let eventStart = startDate.getTime();
+    let eventEnd = new Date(eventStart).setHours(23, 59, 59, 999);
+    while (endDate.getTime() > eventEnd) {
+      result.push([new Date(eventStart), new Date(eventEnd)]);
+      eventStart = eventEnd + 1;
+      eventEnd = new Date(eventStart + 1).setHours(23, 59, 59, 999);
     }
-
-    this.setEventStyles(eventDataContainer, "height", previousHeight);
-    for (let i = 0; i <= eventDaysLength; i++) {
-      const eventDataContainerNextDay = document.createElement("div");
-      eventDataContainerNextDay.setAttribute("class", "event");
-      if (event.startDate.getDay() + i + 1 != DAYS_IN_A_WEEK) {
-        this.cellArray[0][event.startDate.getDay() + i + 1].appendChild(
-          eventDataContainerNextDay
-        );
-      }
-      temp -= FULL_DAY_LENGTH;
-      if (temp - FULL_DAY_LENGTH < 0) {
-        this.setEventStyles(
-          eventDataContainerNextDay,
-          "height",
-          fullEventHeight - previousHeight
-        );
-        return;
-      }
-      this.setEventStyles(eventDataContainer, "height", FULL_DAY_LENGTH);
-    }
+    result.push([new Date(eventStart), endDate]);
+    return result;
   }
 }
