@@ -34,10 +34,10 @@ export class Renderer {
   }
 
   setEventStyles(startDate, endDate, eventDataContainer) {
-    eventDataContainer.style.top =
-      (CELL_HEIGHT * startDate.getMinutes()) / 60 + "px";
-    eventDataContainer.style.height =
-      ((endDate - startDate) / (1000 * 60 * 60)) * CELL_HEIGHT + "px";
+    Object.assign(eventDataContainer.style, {
+      top: (CELL_HEIGHT * startDate.getMinutes()) / 60 + "px",
+      height: ((endDate - startDate) / (1000 * 60 * 60)) * CELL_HEIGHT + "px",
+    });
   }
 
   calcEventLengthInDays({ startDate, endDate }) {
