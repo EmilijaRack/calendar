@@ -19,6 +19,9 @@ export class Renderer {
   renderEvent(event) {
     for (let [start, end] of this.calcEventLengthInDays(event)) {
       const eventDataContainer = document.createElement("div");
+      eventDataContainer.addEventListener("click", () =>
+        this.onEventClickFn(event.id)
+      );
       eventDataContainer.setAttribute("class", "event");
       eventDataContainer.innerText = `${event.title}, ${event.startDate
         .toTimeString()
@@ -48,5 +51,17 @@ export class Renderer {
     }
     result.push([new Date(eventStart), endDate]);
     return result;
+  }
+
+  onEventClick(onEventClickFn) {
+    this.onEventClickFn = onEventClickFn;
+  }
+
+  clearEventsFromBoard() {
+    for (let i = 0; i < HOURS_IN_A_DAY; i++) {
+      for (let j = 0; j < DAYS_IN_A_WEEK; j++) {
+        this.cellArray[i][j].replaceChildren();
+      }
+    }
   }
 }
