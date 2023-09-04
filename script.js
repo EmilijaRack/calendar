@@ -1,31 +1,55 @@
+import { Event } from "./event.js";
 import { EventModal } from "./eventModal.js";
+import { Renderer } from "./renderer.js";
+import { createCalendarAPI } from "./localStorage.js";
 
-const modalContainer = document.getElementsByClassName("event-modal")[0];
-const openModalButton = document.getElementsByClassName("btn-event")[0];
-const todayButton = document.getElementsByClassName("btn-date")[0];
+const root = document.querySelector("#root");
+const modalContainer = document.querySelector("#event-modal");
+const openModalButton = document.querySelector(".btn-event");
+const todayButton = document.querySelector(".btn-date");
 const closeModalButton = document.querySelector(".close-btn");
-const calendarCells = document.querySelectorAll(".main-calendar__body__cells");
-const CELL_HEIGHT = 50;
-let cellArray = new Array(24).fill(0).map(() => {
-  return new Array(7);
-});
-
-window.addEventListener("load", (event) => {
-  for (let i = 0; i < 24; i++) {
-    for (let j = 0; j < 7; j++) {
-      cellArray[i][j] = calendarCells[i * 7 + j];
-    }
-  }
-  renderEvent(eventData);
-});
-
+const eventModal = new EventModal(modalContainer);
+const localStorageApi = createCalendarAPI({ delay: 0 });
+const renderer = new Renderer(root);
 openModalButton.addEventListener("click", (event) => {
-  modalContainer.style.display = "flex";
   event.stopPropagation();
+  eventModal.open();
 });
+
+eventModal.onSave((event) => {
+  renderer.renderEvent(event);
+  eventModal.close();
+  return localStorageApi.createEvent(event).catch(() => {
+    if (confirm("Failed to save. Try again?")) {
+      return onSave(event);
+    }
+  });
+});
+
+function loadEvents() {
+  return localStorageApi
+    .listEvents()
+    .then((eventsWithStringsAsDates) => {
+      eventsWithStringsAsDates
+        .map((event) => ({
+          ...event,
+          startDate: new Date(event.startDate),
+          endDate: new Date(event.endDate),
+        }))
+        .forEach(renderer.renderEvent.bind(renderer));
+    })
+    .catch((e) => {
+      console.log(e);
+      if (confirm("Failed to load. Try again?")) {
+        return loadEvents();
+      }
+    });
+}
+
+window.addEventListener("load", loadEvents());
 
 closeModalButton.addEventListener("click", () => {
-  modalContainer.style.display = "none";
+  eventModal.close();
 });
 
 document.addEventListener("click", (event) => {
@@ -33,7 +57,7 @@ document.addEventListener("click", (event) => {
     !modalContainer.contains(event.target) &&
     event.target !== modalContainer
   ) {
-    modalContainer.style.display = "none";
+    eventModal.close();
   }
 });
 
@@ -41,25 +65,20 @@ todayButton.addEventListener("click", (event) => {
   event.stopPropagation();
 });
 
-const eventData = {
-  id: Date.now(),
-  title: "L",
-  startDate: new Date("2023-07-11:15:30:00"),
-  endDate: new Date("2023-07-11:16:00:00"),
-};
+renderer.onEventClick((event) => {
+  if (confirm("Delete this event?")) {
+    deleteEventWhenConfirmed(event);
+  }
+});
 
-const renderEvent = (event) => {
-  const eventDataContainer = document.createElement("div");
-  eventDataContainer.setAttribute("class", "event");
-  eventDataContainer.innerText = `${event.title} ${event.startDate.getHours()}`;
-  cellArray[event.startDate.getHours()][event.startDate.getDay()].appendChild(
-    eventDataContainer
-  );
-  const eventLength = (event.endDate - event.startDate) / (1000 * 60 * 60);
-  eventDataContainer.style.height = CELL_HEIGHT * eventLength + "px";
-  eventDataContainer.style.top =
-    (CELL_HEIGHT * event.startDate.getMinutes()) / 60 + "px";
-};
-
-// const eventObj = new EventModal(eventData);
-// console.log(eventObj.updateState());
+function deleteEventWhenConfirmed(id) {
+  return localStorageApi
+    .deleteEvent(id)
+    .then(renderer.clearEventsFromBoard(), loadEvents())
+    .catch((e) => {
+      if (confirm("Failed to remove an event. Try again?")) {
+        console.log(e);
+        return deleteEventWhenConfirmed();
+      }
+    });
+}

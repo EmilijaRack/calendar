@@ -23,7 +23,7 @@
     <script src="../script.js" type="module" defer></script>
   </head>
 
-  <body>
+  <body id="root">
     <header class="header">
       <nav class="header__block header__block--margin">
         <span class="header__block__hamburger-menu">
@@ -131,18 +131,20 @@
           </section>
         </section>
       </section>
-      <section class="event-modal">
+      <section class="event-modal" id="event-modal">
         <form class="event-form" onsubmit="return false">
           <section class="form-header">
             <button class="material-symbols-outlined close-btn">close</button>
           </section>
           <section class="form-body">
             <span class="form-body__icons"></span>
-            <input
-              type="text"
-              placeholder="Add title"
-              class="form-body__add-item"
-            />
+            <div class="title">
+              <input
+                type="text"
+                placeholder="Add title"
+                class="form-body__add-item"
+              />
+            </div>
             <span class="form-body__icons"></span>
             <div class="form-body__btn-list">
               <button class="event-btn">Event</button>
@@ -161,7 +163,7 @@
             <span class="form-body__icons material-symbols-outlined">
               access_time
             </span>
-            <div>
+            <div class="time-input">
               <input
                 type="datetime-local"
                 class="simple-btn start-time"
