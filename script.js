@@ -9,7 +9,7 @@ const openModalButton = document.querySelector(".btn-event");
 const todayButton = document.querySelector(".btn-date");
 const closeModalButton = document.querySelector(".close-btn");
 const eventModal = new EventModal(modalContainer);
-const localStorageApi = createCalendarAPI({ delay: 1000 });
+const localStorageApi = createCalendarAPI({ delay: 0 });
 const renderer = new Renderer(root);
 openModalButton.addEventListener("click", (event) => {
   event.stopPropagation();
@@ -26,7 +26,7 @@ eventModal.onSave((event) => {
   });
 });
 
-window.addEventListener("load", function loadEvents() {
+function loadEvents() {
   return localStorageApi
     .listEvents()
     .then((eventsWithStringsAsDates) => {
@@ -44,7 +44,9 @@ window.addEventListener("load", function loadEvents() {
         return loadEvents();
       }
     });
-});
+}
+
+window.addEventListener("load", loadEvents());
 
 closeModalButton.addEventListener("click", () => {
   eventModal.close();
@@ -62,3 +64,21 @@ document.addEventListener("click", (event) => {
 todayButton.addEventListener("click", (event) => {
   event.stopPropagation();
 });
+
+renderer.onEventClick((event) => {
+  if (confirm("Delete this event?")) {
+    deleteEventWhenConfirmed(event);
+  }
+});
+
+function deleteEventWhenConfirmed(id) {
+  return localStorageApi
+    .deleteEvent(id)
+    .then(renderer.clearEventsFromBoard(), loadEvents())
+    .catch((e) => {
+      if (confirm("Failed to remove an event. Try again?")) {
+        console.log(e);
+        return deleteEventWhenConfirmed();
+      }
+    });
+}
