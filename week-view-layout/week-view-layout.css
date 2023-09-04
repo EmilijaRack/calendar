@@ -241,7 +241,7 @@ body {
   border-radius: 5px;
   padding-top: 6px;
   padding-left: 6px;
-  border: 2px solid var(--textfield-primary);
+  border: 2px solid var(--secondary-variant);
   position: absolute;
   z-index: 1;
 }
