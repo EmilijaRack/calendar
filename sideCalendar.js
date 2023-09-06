@@ -84,6 +84,11 @@ export class SideCalendar {
 
     for (let i = 1; i <= this.state.displayMonthLength; i++) {
       this.cells[i + this.state.monthStartWeekDay - 1].innerHTML = i;
+
+      this.cells[i + this.state.monthStartWeekDay - 1].classList.remove(
+        "calendar-dates__cell--gray"
+      );
+
       if (
         i === today.getDate() &&
         this.state.displayDate.getMonth() === today.getMonth() &&
@@ -106,7 +111,9 @@ export class SideCalendar {
     for (let i = 0; i < this.state.monthStartWeekDay; i++) {
       this.cells[i].innerHTML =
         this.state.prevMonthLength - this.state.monthStartWeekDay + 1 + i;
+
       this.cells[i].classList.add("calendar-dates__cell--gray");
+
       const prevMonth = new Date(this.state.displayDate);
       prevMonth.setDate(0);
       if (
@@ -121,9 +128,7 @@ export class SideCalendar {
     }
   }
 
-  renderNextMonthCells() {
-    const today = new Date();
-
+  renderNextMonthCells(today) {
     for (
       let i = 1;
       i <=
@@ -135,9 +140,11 @@ export class SideCalendar {
       this.cells[
         i + this.state.displayMonthLength + this.state.monthStartWeekDay - 1
       ].innerHTML = i;
+
       this.cells[
         i + this.state.displayMonthLength + this.state.monthStartWeekDay - 1
       ].classList.add("calendar-dates__cell--gray");
+
       const nextMonth = new Date(this.state.displayDate);
       nextMonth.setDate(this.getCurMonthLength() + 1);
       if (
@@ -157,8 +164,9 @@ export class SideCalendar {
   }
 
   renderSideCalendarCells() {
-    this.renderCurrentMonthCells();
-    this.renderPrevMonthCells();
-    this.renderNextMonthCells();
+    const today = new Date();
+    this.renderCurrentMonthCells(today);
+    this.renderPrevMonthCells(today);
+    this.renderNextMonthCells(today);
   }
 }
