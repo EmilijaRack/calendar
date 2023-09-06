@@ -1,3 +1,4 @@
+import { isToday, setDate } from "./dateHelpers.js";
 import { SideCalendarState } from "./sideCalendarState.js";
 
 const MAX_NUMBER_OF_CELLS = 42;
@@ -84,52 +85,50 @@ export class SideCalendar {
     );
   }
 
-  renderCurrentMonthCells(today) {
+  renderCurrentMonthCells() {
     for (let i = 1; i <= this.state.displayMonthLength; i++) {
-      this.cells[i + this.state.monthStartWeekDay - 1].innerHTML = i;
+      const currentCell = this.cells[i + this.state.monthStartWeekDay - 1];
+      currentCell.innerHTML = i;
 
-      this.cells[i + this.state.monthStartWeekDay - 1].classList.remove(
-        "calendar-dates__cell--gray"
-      );
+      currentCell.classList.remove("calendar-dates__cell--gray");
 
-      if (
-        i === today.getDate() &&
-        this.state.displayDate.getMonth() === today.getMonth() &&
-        this.state.displayDate.getFullYear() === today.getFullYear()
-      ) {
-        this.cells[i + this.state.monthStartWeekDay - 1].classList.add(
-          "current-day-styling"
-        );
+      if (isToday(setDate(this.state.displayDate, i))) {
+        addHighlight(currentCell);
       } else {
-        this.cells[i + this.state.monthStartWeekDay - 1].classList.remove(
-          "current-day-styling"
-        );
+        removeHighlight(currentCell);
       }
     }
   }
 
-  renderPrevMonthCells(today) {
+  addHighlight(element) {
+    element.classList.add("current-day-styling");
+  }
+
+  removeHighlight(element) {
+    element.classList.remove("current-day-styling");
+  }
+
+  renderPrevMonthCells() {
     for (let i = 0; i < this.state.monthStartWeekDay; i++) {
-      this.cells[i].innerHTML =
+      const currentCell = this.cells[i];
+
+      currentCell.innerHTML =
         this.state.prevMonthLength - this.state.monthStartWeekDay + 1 + i;
 
-      this.cells[i].classList.add("calendar-dates__cell--gray");
+      currentCell.classList.add("calendar-dates__cell--gray");
 
       const prevMonth = new Date(this.state.displayDate);
       prevMonth.setDate(0);
-      if (
-        i === today.getDate() &&
-        prevMonth.getMonth() === today.getMonth() &&
-        prevMonth.getFullYear() === today.getFullYear()
-      ) {
-        this.cells[i].classList.add("current-day-styling");
+
+      if (isToday(setDate(prevMonth, i))) {
+        addHighlight(currentCell);
       } else {
-        this.cells[i].classList.remove("current-day-styling");
+        removeHighlight(currentCell);
       }
     }
   }
 
-  renderNextMonthCells(today) {
+  renderNextMonthCells() {
     for (
       let i = 1;
       i <=
@@ -138,36 +137,28 @@ export class SideCalendar {
         this.state.monthStartWeekDay;
       i++
     ) {
-      this.cells[
-        i + this.state.displayMonthLength + this.state.monthStartWeekDay - 1
-      ].innerHTML = i;
+      const currentCell =
+        this.cells[
+          i + this.state.displayMonthLength + this.state.monthStartWeekDay - 1
+        ];
+      currentCell.innerHTML = i;
 
-      this.cells[
-        i + this.state.displayMonthLength + this.state.monthStartWeekDay - 1
-      ].classList.add("calendar-dates__cell--gray");
+      currentCell.classList.add("calendar-dates__cell--gray");
 
       const nextMonth = new Date(this.state.displayDate);
       nextMonth.setDate(this.getCurMonthLength() + 1);
-      if (
-        i === today.getDate() &&
-        nextMonth.getMonth() === today.getMonth() &&
-        nextMonth.getFullYear() === today.getFullYear()
-      ) {
-        this.cells[
-          i + this.state.displayMonthLength + this.state.monthStartWeekDay - 1
-        ].classList.add("current-day-styling");
+
+      if (isToday(setDate(nextMonth, i))) {
+        addHighlight(currentCell);
       } else {
-        this.cells[
-          i + this.state.displayMonthLength + this.state.monthStartWeekDay - 1
-        ].classList.remove("current-day-styling");
+        removeHighlight(currentCell);
       }
     }
   }
 
   renderSideCalendarCells() {
-    const today = new Date();
-    this.renderCurrentMonthCells(today);
-    this.renderPrevMonthCells(today);
-    this.renderNextMonthCells(today);
+    this.renderCurrentMonthCells();
+    this.renderPrevMonthCells();
+    this.renderNextMonthCells();
   }
 }
