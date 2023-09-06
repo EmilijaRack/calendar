@@ -133,6 +133,7 @@ body {
   display: grid;
   grid-template-columns: repeat(7, auto);
   cursor: pointer;
+  height: 200px;
 }
 
 .calendar-dates__cells > li {
