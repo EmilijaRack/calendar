@@ -11,16 +11,16 @@ export class SideCalendar {
     this.state = new SideCalendarState();
 
     this.leftArrowBtn.addEventListener("click", () => {
-      this.navigateLeft();
+      this.updateDisplayDate(-1);
       this.updateSideCalendarState();
       this.updateCurrentDateDisplay();
       this.renderSideCalendarCells();
     });
 
     this.rightArrowBtn.addEventListener("click", () => {
-      this.navigateRight();
-      this.updateCurrentDateDisplay();
+      this.updateDisplayDate(1);
       this.updateSideCalendarState();
+      this.updateCurrentDateDisplay();
       this.renderSideCalendarCells();
     });
 
@@ -30,13 +30,16 @@ export class SideCalendar {
       this.renderSideCalendarCells();
     });
   }
-
-  navigateLeft() {
-    this.state.displayDate.setMonth(this.state.displayDate.getMonth() - 1);
-  }
-
-  navigateRight() {
-    this.state.displayDate.setMonth(this.state.displayDate.getMonth() + 1);
+  updateDisplayDate(slider) {
+    this.state = new SideCalendarState(
+      this.state.displayMonthLength,
+      this.state.prevMonthLength,
+      this.state.monthStartWeekDay,
+      new Date(
+        this.state.displayDate.getFullYear(),
+        this.state.displayDate.getMonth() + slider
+      )
+    );
   }
 
   updateCurrentDateDisplay() {
@@ -79,9 +82,7 @@ export class SideCalendar {
     );
   }
 
-  renderCurrentMonthCells() {
-    const today = new Date();
-
+  renderCurrentMonthCells(today) {
     for (let i = 1; i <= this.state.displayMonthLength; i++) {
       this.cells[i + this.state.monthStartWeekDay - 1].innerHTML = i;
 
@@ -105,9 +106,7 @@ export class SideCalendar {
     }
   }
 
-  renderPrevMonthCells() {
-    const today = new Date();
-
+  renderPrevMonthCells(today) {
     for (let i = 0; i < this.state.monthStartWeekDay; i++) {
       this.cells[i].innerHTML =
         this.state.prevMonthLength - this.state.monthStartWeekDay + 1 + i;
