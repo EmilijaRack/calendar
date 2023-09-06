@@ -1,6 +1,8 @@
 import { SideCalendarState } from "./sideCalendarState.js";
 
 const MAX_NUMBER_OF_CELLS = 42;
+const ONE_MONT_LEFT = -1;
+const ONE_MONTH_RIGHT = 1;
 
 export class SideCalendar {
   constructor() {
@@ -11,21 +13,21 @@ export class SideCalendar {
     this.state = new SideCalendarState();
 
     this.leftArrowBtn.addEventListener("click", () => {
-      this.updateDisplayDate(-1);
+      this.updateDisplayDate(ONE_MONT_LEFT);
       this.updateSideCalendarState();
-      this.updateCurrentDateDisplay();
+      this.displayCurrentDate();
       this.renderSideCalendarCells();
     });
 
     this.rightArrowBtn.addEventListener("click", () => {
-      this.updateDisplayDate(1);
+      this.updateDisplayDate(ONE_MONTH_RIGHT);
       this.updateSideCalendarState();
-      this.updateCurrentDateDisplay();
+      this.displayCurrentDate();
       this.renderSideCalendarCells();
     });
 
     window.addEventListener("load", () => {
-      this.updateCurrentDateDisplay();
+      this.displayCurrentDate();
       this.updateSideCalendarState();
       this.renderSideCalendarCells();
     });
@@ -42,7 +44,7 @@ export class SideCalendar {
     );
   }
 
-  updateCurrentDateDisplay() {
+  displayCurrentDate() {
     this.currentDateDisplay.innerHTML = `${this.state.displayDate.toLocaleString(
       "default",
       { month: "long" }
