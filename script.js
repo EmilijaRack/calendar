@@ -3,6 +3,7 @@ import { EventModal } from "./eventModal.js";
 import { Renderer } from "./renderer.js";
 import { createCalendarAPI } from "./localStorage.js";
 import { SideCalendar } from "./sideCalendar.js";
+import { MainCalendar } from "./mainCalendar.js";
 
 const root = document.querySelector("#root");
 const modalContainer = document.querySelector("#event-modal");
@@ -13,6 +14,7 @@ const eventModal = new EventModal(modalContainer);
 const localStorageApi = createCalendarAPI({ delay: 0 });
 const renderer = new Renderer(root);
 const sideCalendar = new SideCalendar();
+const mainCalendar = new MainCalendar();
 
 openModalButton.addEventListener("click", (event) => {
   event.stopPropagation();
