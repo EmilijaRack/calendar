@@ -13,12 +13,12 @@ export class MainCalendar {
     this.days = document.querySelectorAll(".week-days__cells--h1");
 
     this.leftArrowBtn.addEventListener("click", () => {
-      this.setNewDateValue(PREV);
+      this.updateState(PREV);
       this.handleNavigation();
     });
 
     this.rightArrowBtn.addEventListener("click", () => {
-      this.setNewDateValue(NEXT);
+      this.updateState(NEXT);
       this.handleNavigation();
     });
 
@@ -29,10 +29,10 @@ export class MainCalendar {
 
   handleNavigation() {
     this.displayCurrentDate();
-    this.renderCurrentWeek();
+    this.renderDisplayWeek();
   }
 
-  setNewDateValue(direction) {
+  updateState(direction) {
     this.state = new MainCalendarState(
       new Date(
         this.state.displayDate.getFullYear(),
@@ -42,7 +42,7 @@ export class MainCalendar {
       new Date(
         this.state.displayDate.getFullYear(),
         this.state.displayDate.getMonth(),
-        this.state.displayDate.getDate() + direction - new Date().getDay() + 1
+        this.state.displayDate.getDate() + direction - new Date().getDay()
       ).getDate()
     );
   }
@@ -62,7 +62,7 @@ export class MainCalendar {
     element.classList.remove("current-day-styling");
   }
 
-  renderCurrentWeek() {
+  renderDisplayWeek() {
     for (let i = 0; i < this.days.length; i++) {
       const currentCell = this.days[i];
       const currentDate = new Date(this.state.displayDate);
