@@ -2,45 +2,41 @@ import { isToday, setDate } from "./dateHelpers.js";
 import { SideCalendarState } from "./sideCalendarState.js";
 
 const MAX_NUMBER_OF_CELLS = 42;
-const ONE_MONT_LEFT = -1;
+const ONE_MONTH_LEFT = -1;
 const ONE_MONTH_RIGHT = 1;
 
 export class SideCalendar {
   constructor() {
     this.currentDateDisplay = document.querySelector(".current-date");
-    this.leftArrowBtn = document.querySelectorAll(".btn-arrow")[2];
-    this.rightArrowBtn = document.querySelectorAll(".btn-arrow")[3];
     this.cells = document.querySelectorAll(".calendar-dates__cell");
     this.state = new SideCalendarState();
 
+    this.leftArrowBtn = document.querySelector("#side-calendar-left-arrow");
     this.leftArrowBtn.addEventListener("click", () => {
-      this.updateDisplayDate(ONE_MONT_LEFT);
-      this.updateSideCalendarState();
-      this.displayCurrentDate();
-      this.renderSideCalendarCells();
+      this.handleNavigation(ONE_MONTH_LEFT);
     });
 
+    this.rightArrowBtn = document.querySelector("#side-calendar-right-arrow");
     this.rightArrowBtn.addEventListener("click", () => {
-      this.updateDisplayDate(ONE_MONTH_RIGHT);
-      this.updateSideCalendarState();
-      this.displayCurrentDate();
-      this.renderSideCalendarCells();
+      this.handleNavigation(ONE_MONTH_RIGHT);
     });
 
     window.addEventListener("load", () => {
-      this.displayCurrentDate();
-      this.updateSideCalendarState();
-      this.renderSideCalendarCells();
+      this.handleNavigation(0);
     });
   }
-  updateDisplayDate(slider) {
+
+  handleNavigation(direction) {
+    this.updateDisplayDate(direction);
+    this.displayCurrentDate();
+    this.renderSideCalendarCells();
+  }
+
+  updateDisplayDate(direction) {
     this.state = new SideCalendarState(
-      this.state.displayMonthLength,
-      this.state.prevMonthLength,
-      this.state.monthStartWeekDay,
       new Date(
         this.state.displayDate.getFullYear(),
-        this.state.displayDate.getMonth() + slider
+        this.state.displayDate.getMonth() + direction
       )
     );
   }
@@ -52,39 +48,6 @@ export class SideCalendar {
     )} ${this.state.displayDate.getFullYear()}`;
   }
 
-  getCurMonthLength() {
-    const curMonthLength = new Date(
-      this.state.displayDate.getFullYear(),
-      this.state.displayDate.getMonth(),
-      0
-    );
-    return curMonthLength.getDate();
-  }
-
-  getPrevMonthLength() {
-    const prevMonth = new Date(this.state.displayDate);
-    prevMonth.setDate(0);
-    return prevMonth.getDate();
-  }
-
-  getMonthStartWeekDay() {
-    const monthStartWeekDay = new Date(
-      this.state.displayDate.getFullYear(),
-      this.state.displayDate.getMonth(),
-      1
-    );
-    return monthStartWeekDay.getDay();
-  }
-
-  updateSideCalendarState() {
-    this.state = new SideCalendarState(
-      this.getCurMonthLength(),
-      this.getPrevMonthLength(),
-      this.getMonthStartWeekDay(),
-      this.state.displayDate
-    );
-  }
-
   renderCurrentMonthCells() {
     for (let i = 1; i <= this.state.displayMonthLength; i++) {
       const currentCell = this.cells[i + this.state.monthStartWeekDay - 1];
@@ -93,9 +56,9 @@ export class SideCalendar {
       currentCell.classList.remove("calendar-dates__cell--gray");
 
       if (isToday(setDate(this.state.displayDate, i))) {
-        addHighlight(currentCell);
+        this.addHighlight(currentCell);
       } else {
-        removeHighlight(currentCell);
+        this.removeHighlight(currentCell);
       }
     }
   }
@@ -121,9 +84,9 @@ export class SideCalendar {
       prevMonth.setDate(0);
 
       if (isToday(setDate(prevMonth, i))) {
-        addHighlight(currentCell);
+        this.addHighlight(currentCell);
       } else {
-        removeHighlight(currentCell);
+        this.removeHighlight(currentCell);
       }
     }
   }
@@ -146,12 +109,12 @@ export class SideCalendar {
       currentCell.classList.add("calendar-dates__cell--gray");
 
       const nextMonth = new Date(this.state.displayDate);
-      nextMonth.setDate(this.getCurMonthLength() + 1);
+      nextMonth.setDate(this.state.displayMonthLength + 1);
 
       if (isToday(setDate(nextMonth, i))) {
-        addHighlight(currentCell);
+        this.addHighlight(currentCell);
       } else {
-        removeHighlight(currentCell);
+        this.removeHighlight(currentCell);
       }
     }
   }
