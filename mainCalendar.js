@@ -1,7 +1,8 @@
 import { MainCalendarState } from "./mainCalendarState.js";
+import { isToday } from "./dateHelpers.js";
 
-const ONE_WEEK_LEFT = -7;
-const ONE_WEEK_RIGHT = 7;
+const PREV = -7;
+const NEXT = 7;
 
 export class MainCalendar {
   constructor() {
@@ -9,29 +10,40 @@ export class MainCalendar {
     this.leftArrowBtn = document.querySelectorAll(".btn-arrow")[0];
     this.rightArrowBtn = document.querySelectorAll(".btn-arrow")[1];
     this.currentDateDisplay = document.querySelector(".date");
+    this.days = document.querySelectorAll(".week-days__cells--h1");
 
     this.leftArrowBtn.addEventListener("click", () => {
-      this.setNewDateValue(ONE_WEEK_LEFT);
-      this.displayCurrentDate();
+      this.setNewDateValue(PREV);
+      this.handleNavigation();
     });
 
     this.rightArrowBtn.addEventListener("click", () => {
-      this.setNewDateValue(ONE_WEEK_RIGHT);
-      this.displayCurrentDate();
+      this.setNewDateValue(NEXT);
+      this.handleNavigation();
     });
 
     window.addEventListener("load", () => {
-      this.displayCurrentDate();
+      this.handleNavigation();
     });
   }
 
-  setNewDateValue(slider) {
+  handleNavigation() {
+    this.displayCurrentDate();
+    this.renderCurrentWeek();
+  }
+
+  setNewDateValue(direction) {
     this.state = new MainCalendarState(
       new Date(
         this.state.displayDate.getFullYear(),
         this.state.displayDate.getMonth(),
-        this.state.displayDate.getDate() + slider
-      )
+        this.state.displayDate.getDate() + direction
+      ),
+      new Date(
+        this.state.displayDate.getFullYear(),
+        this.state.displayDate.getMonth(),
+        this.state.displayDate.getDate() + direction - new Date().getDay() + 1
+      ).getDate()
     );
   }
 
@@ -40,5 +52,28 @@ export class MainCalendar {
       "default",
       { month: "long" }
     )} ${this.state.displayDate.getFullYear()}`;
+  }
+
+  addHighlight(element) {
+    element.classList.add("current-day-styling");
+  }
+
+  removeHighlight(element) {
+    element.classList.remove("current-day-styling");
+  }
+
+  renderCurrentWeek() {
+    for (let i = 0; i < this.days.length; i++) {
+      const currentCell = this.days[i];
+      const currentDate = new Date(this.state.displayDate);
+      currentDate.setDate(this.state.weekStartDate + i);
+      currentCell.innerHTML = currentDate.getDate();
+
+      if (isToday(currentDate)) {
+        this.addHighlight(currentCell);
+      } else {
+        this.removeHighlight(currentCell);
+      }
+    }
   }
 }
