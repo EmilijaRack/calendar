@@ -4,6 +4,7 @@ import { Renderer } from "./renderer.js";
 import { createCalendarAPI } from "./localStorage.js";
 import { SideCalendar } from "./sideCalendar.js";
 import { MainCalendar } from "./mainCalendar.js";
+import { MainCalendarState } from "./mainCalendarState.js";
 
 const root = document.querySelector("#root");
 const modalContainer = document.querySelector("#event-modal");
@@ -22,7 +23,6 @@ openModalButton.addEventListener("click", (event) => {
 });
 
 eventModal.onSave((event) => {
-  renderer.renderEvent(event);
   eventModal.close();
   return localStorageApi.createEvent(event).catch(() => {
     if (confirm("Failed to save. Try again?")) {
@@ -31,7 +31,13 @@ eventModal.onSave((event) => {
   });
 });
 
-function loadEvents() {
+function loadEvents(newWeekDate) {
+  const weekEndDate = new Date(newWeekDate.getTime());
+  weekEndDate.setDate(weekEndDate.getDate() + 7 - newWeekDate.getDay());
+
+  const weekStartDate = new Date(newWeekDate.getTime());
+  weekStartDate.setDate(newWeekDate.getDate() - newWeekDate.getDay());
+
   return localStorageApi
     .listEvents()
     .then((eventsWithStringsAsDates) => {
@@ -41,17 +47,26 @@ function loadEvents() {
           startDate: new Date(event.startDate),
           endDate: new Date(event.endDate),
         }))
+        .filter(
+          (event) =>
+            event.startDate >= weekStartDate && event.endDate <= weekEndDate
+        )
         .forEach(renderer.renderEvent.bind(renderer));
     })
     .catch((e) => {
       console.log(e);
       if (confirm("Failed to load. Try again?")) {
-        return loadEvents();
+        return loadEvents(newWeekDate);
       }
     });
 }
 
-window.addEventListener("load", loadEvents());
+window.addEventListener("load", loadEvents(new Date()));
+
+mainCalendar.onWeekChange((weekStartDate) => {
+  renderer.clearEventsFromBoard();
+  loadEvents(weekStartDate);
+});
 
 closeModalButton.addEventListener("click", () => {
   eventModal.close();

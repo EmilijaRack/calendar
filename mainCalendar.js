@@ -14,20 +14,26 @@ export class MainCalendar {
 
     this.leftArrowBtn.addEventListener("click", () => {
       this.updateState(PREV);
-      this.handleNavigation();
+      this.initialRender();
+      this.onWeekChangeCb(this.state.weekStartDate);
     });
 
     this.rightArrowBtn.addEventListener("click", () => {
       this.updateState(NEXT);
-      this.handleNavigation();
+      this.initialRender();
+      this.onWeekChangeCb(this.state.weekStartDate);
     });
 
     window.addEventListener("load", () => {
-      this.handleNavigation();
+      this.initialRender();
     });
   }
 
-  handleNavigation() {
+  onWeekChange(onWeekChangeCb) {
+    this.onWeekChangeCb = onWeekChangeCb;
+  }
+
+  initialRender() {
     this.displayCurrentDate();
     this.renderDisplayWeek();
   }
@@ -35,23 +41,18 @@ export class MainCalendar {
   updateState(direction) {
     this.state = new MainCalendarState(
       new Date(
-        this.state.displayDate.getFullYear(),
-        this.state.displayDate.getMonth(),
-        this.state.displayDate.getDate() + direction
-      ),
-      new Date(
-        this.state.displayDate.getFullYear(),
-        this.state.displayDate.getMonth(),
-        this.state.displayDate.getDate() + direction - new Date().getDay()
-      ).getDate()
+        this.state.weekStartDate.getFullYear(),
+        this.state.weekStartDate.getMonth(),
+        this.state.weekStartDate.getDate() + direction
+      )
     );
   }
 
   displayCurrentDate() {
-    this.currentDateDisplay.innerHTML = `${this.state.displayDate.toLocaleString(
+    this.currentDateDisplay.innerHTML = `${this.state.weekStartDate.toLocaleString(
       "default",
       { month: "long" }
-    )} ${this.state.displayDate.getFullYear()}`;
+    )} ${this.state.weekStartDate.getFullYear()}`;
   }
 
   addHighlight(element) {
@@ -65,8 +66,13 @@ export class MainCalendar {
   renderDisplayWeek() {
     for (let i = 0; i < this.days.length; i++) {
       const currentCell = this.days[i];
-      const currentDate = new Date(this.state.displayDate);
-      currentDate.setDate(this.state.weekStartDate + i);
+      const currentDate = new Date(
+        this.state.weekStartDate.getFullYear(),
+        this.state.weekStartDate.getMonth(),
+        this.state.weekStartDate.getDate() -
+          this.state.weekStartDate.getDay() +
+          i
+      );
       currentCell.innerHTML = currentDate.getDate();
 
       if (isToday(currentDate)) {
