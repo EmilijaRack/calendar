@@ -9,7 +9,7 @@ export class SideCalendarState {
   getCurMonthLength() {
     const curMonthLength = new Date(
       this.displayDate.getFullYear(),
-      this.displayDate.getMonth(),
+      this.displayDate.getMonth() + 1,
       0
     );
     return curMonthLength.getDate();
