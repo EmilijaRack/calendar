@@ -13,20 +13,20 @@ export class SideCalendar {
 
     this.leftArrowBtn = document.querySelector("#side-calendar-left-arrow");
     this.leftArrowBtn.addEventListener("click", () => {
-      this.handleNavigation(ONE_MONTH_LEFT);
+      this.initialNavigation(ONE_MONTH_LEFT);
     });
 
     this.rightArrowBtn = document.querySelector("#side-calendar-right-arrow");
     this.rightArrowBtn.addEventListener("click", () => {
-      this.handleNavigation(ONE_MONTH_RIGHT);
+      this.initialNavigation(ONE_MONTH_RIGHT);
     });
 
     window.addEventListener("load", () => {
-      this.handleNavigation(0);
+      this.initialNavigation(0);
     });
   }
 
-  handleNavigation(direction) {
+  initialNavigation(direction) {
     this.updateDisplayDate(direction);
     this.displayCurrentDate();
     this.renderSideCalendarCells();
