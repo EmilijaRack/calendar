@@ -1,5 +1,5 @@
 export class MainCalendarState {
-  constructor(weekStartDate) {
-    this.weekStartDate = weekStartDate ?? new Date();
+  constructor(displayDate) {
+    this.displayDate = displayDate ?? new Date();
   }
 }
