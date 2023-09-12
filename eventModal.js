@@ -12,6 +12,7 @@ export class EventModal {
     this.startTime = root.querySelector(".start-time");
     this.endTime = root.querySelector(".end-time");
     this.eventTitle = root.querySelector(".form-body__add-item");
+
     this.eventTitle.addEventListener("change", () => {
       if (this.isTitleCorrect()) {
         this.eventTitle.classList.remove("noTitleError");
@@ -37,6 +38,10 @@ export class EventModal {
         )
       );
     });
+
+    root
+      .querySelector(".close-btn")
+      .addEventListener("click", () => this.close());
   }
 
   open() {
