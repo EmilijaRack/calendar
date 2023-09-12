@@ -1,58 +1,28 @@
-import { MainCalendarState } from "./mainCalendarState.js";
 import { isToday } from "./dateHelpers.js";
-
-const PREV = -7;
-const NEXT = 7;
+import { Renderer } from "./renderer.js";
+import { createCalendarAPI } from "./localStorage.js";
 
 export class MainCalendar {
-  constructor() {
-    this.state = new MainCalendarState();
-    this.leftArrowBtn = document.querySelectorAll(".btn-arrow")[0];
-    this.rightArrowBtn = document.querySelectorAll(".btn-arrow")[1];
-    this.currentDateDisplay = document.querySelector(".date");
-    this.days = document.querySelectorAll(".week-days__cells--h1");
-
-    this.leftArrowBtn.addEventListener("click", () => {
-      this.updateState(PREV);
-      this.initialRender();
-      this.onWeekChangeCb(this.state.weekStartDate);
-    });
-
-    this.rightArrowBtn.addEventListener("click", () => {
-      this.updateState(NEXT);
-      this.initialRender();
-      this.onWeekChangeCb(this.state.weekStartDate);
-    });
+  constructor(root, eventModal) {
+    this.root = root.querySelector("#root");
+    this.renderer = new Renderer(root);
+    this.days = root.querySelectorAll(".week-days__cells--h1");
+    this.localStorageApi = createCalendarAPI({ delay: 0 });
 
     window.addEventListener("load", () => {
-      this.initialRender();
+      this.renderDisplayWeek();
     });
-  }
 
-  onWeekChange(onWeekChangeCb) {
-    this.onWeekChangeCb = onWeekChangeCb;
-  }
+    this.renderer.onEventClick((event) => {
+      if (confirm("Delete this event?")) {
+        this.deleteEventWhenConfirmed(event);
+      }
+    });
 
-  initialRender() {
-    this.displayCurrentDate();
-    this.renderDisplayWeek();
-  }
-
-  updateState(direction) {
-    this.state = new MainCalendarState(
-      new Date(
-        this.state.weekStartDate.getFullYear(),
-        this.state.weekStartDate.getMonth(),
-        this.state.weekStartDate.getDate() + direction
-      )
-    );
-  }
-
-  displayCurrentDate() {
-    this.currentDateDisplay.innerHTML = `${this.state.weekStartDate.toLocaleString(
-      "default",
-      { month: "long" }
-    )} ${this.state.weekStartDate.getFullYear()}`;
+    eventModal.onSave((event) => {
+      eventModal.close();
+      this.createEvent(event);
+    });
   }
 
   addHighlight(element) {
@@ -63,15 +33,16 @@ export class MainCalendar {
     element.classList.remove("current-day-styling");
   }
 
-  renderDisplayWeek() {
+  renderDisplayWeek(state) {
+    if (!state) return;
+
     for (let i = 0; i < this.days.length; i++) {
       const currentCell = this.days[i];
+
       const currentDate = new Date(
-        this.state.weekStartDate.getFullYear(),
-        this.state.weekStartDate.getMonth(),
-        this.state.weekStartDate.getDate() -
-          this.state.weekStartDate.getDay() +
-          i
+        state.displayDate.getFullYear(),
+        state.displayDate.getMonth(),
+        state.displayDate.getDate() - state.displayDate.getDay() + i
       );
       currentCell.innerHTML = currentDate.getDate();
 
@@ -81,5 +52,67 @@ export class MainCalendar {
         this.removeHighlight(currentCell);
       }
     }
+  }
+
+  renderWeekEvents(events, newWeekDate) {
+    const weekStartDate = new Date(newWeekDate.getTime());
+    weekStartDate.setDate(newWeekDate.getDate() - newWeekDate.getDay());
+
+    const weekEndDate = new Date(newWeekDate.getTime());
+    weekEndDate.setDate(weekEndDate.getDate() + 7 - newWeekDate.getDay());
+
+    events
+      .filter(
+        (event) =>
+          event.startDate >= weekStartDate && event.endDate <= weekEndDate
+      )
+      .forEach((event) => this.renderer.renderEvent(event));
+  }
+
+  onChange(onChangeCb) {
+    this.onChangeCb = onChangeCb;
+  }
+
+  clearBoard() {
+    this.renderer.clearEventsFromBoard();
+  }
+
+  deleteEventWhenConfirmed(id) {
+    {
+      return this.localStorageApi
+        .deleteEvent(id)
+        .then(() => {
+          this.renderer.clearEventsFromBoard();
+          this.onDeletingEventCb(id);
+        })
+        .catch((e) => {
+          if (confirm("Failed to remove an event. Try again?")) {
+            console.log(e);
+            return this.deleteEventWhenConfirmed(id);
+          }
+        });
+    }
+  }
+
+  onDeletingEvent(onDeletingEventCb) {
+    this.onDeletingEventCb = onDeletingEventCb;
+  }
+
+  createEvent(event) {
+    return this.localStorageApi
+      .createEvent(event)
+      .then(() => {
+        this.renderer.clearEventsFromBoard();
+        this.onCreatingEventCb(event);
+      })
+      .catch(() => {
+        if (confirm("Failed to save. Try again?")) {
+          return this.createEvent(event);
+        }
+      });
+  }
+
+  onCreatingEvent(onCreatingEventCb) {
+    this.onCreatingEventCb = onCreatingEventCb;
   }
 }
