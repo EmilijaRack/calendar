@@ -1,6 +1,28 @@
+const PREV = -7;
+const NEXT = 7;
+
 export class HeaderNavigation {
-  constructor() {
-    this.currentDateDisplay = document.querySelector(".date");
+  constructor(root) {
+    this.currentDateDisplay = root.querySelector(".date");
+    this.todayButton = root.querySelector(".btn-date");
+
+    root.querySelector("#top-left-navigation").addEventListener("click", () => {
+      this.onNavigationChangeCb && this.onNavigationChangeCb(PREV);
+    });
+
+    root
+      .querySelector("#top-right-navigation")
+      .addEventListener("click", () => {
+        this.onNavigationChangeCb && this.onNavigationChangeCb(NEXT);
+      });
+
+    this.todayButton.addEventListener("click", (event) => {
+      event.stopPropagation();
+    });
+  }
+
+  onNavigationChange(onNavigationChangeCb) {
+    this.onNavigationChangeCb = onNavigationChangeCb;
   }
 
   displayCurrentDate(state) {
