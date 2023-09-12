@@ -6,20 +6,22 @@ const ONE_MONTH_LEFT = -1;
 const ONE_MONTH_RIGHT = 1;
 
 export class SideCalendar {
-  constructor() {
-    this.currentDateDisplay = document.querySelector(".current-date");
-    this.cells = document.querySelectorAll(".calendar-dates__cell");
+  constructor(root) {
+    this.currentDateDisplay = root.querySelector(".current-date");
+    this.cells = root.querySelectorAll(".calendar-dates__cell");
     this.state = new SideCalendarState();
 
-    this.leftArrowBtn = document.querySelector("#side-calendar-left-arrow");
-    this.leftArrowBtn.addEventListener("click", () => {
-      this.initialNavigation(ONE_MONTH_LEFT);
-    });
+    root
+      .querySelector("#side-calendar-left-arrow")
+      .addEventListener("click", () => {
+        this.initialNavigation(ONE_MONTH_LEFT);
+      });
 
-    this.rightArrowBtn = document.querySelector("#side-calendar-right-arrow");
-    this.rightArrowBtn.addEventListener("click", () => {
-      this.initialNavigation(ONE_MONTH_RIGHT);
-    });
+    root
+      .querySelector("#side-calendar-right-arrow")
+      .addEventListener("click", () => {
+        this.initialNavigation(ONE_MONTH_RIGHT);
+      });
 
     window.addEventListener("load", () => {
       this.initialNavigation(0);
