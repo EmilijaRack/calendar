@@ -3,11 +3,10 @@ import { Renderer } from "./renderer.js";
 import { createCalendarAPI } from "./localStorage.js";
 
 export class MainCalendar {
-  constructor(root, eventModal) {
-    this.root = root.querySelector("#root");
+  constructor(root, eventModal, localStorageApi) {
     this.renderer = new Renderer(root);
     this.days = root.querySelectorAll(".week-days__cells--h1");
-    this.localStorageApi = createCalendarAPI({ delay: 0 });
+    this.localStorageApi = localStorageApi;
 
     window.addEventListener("load", () => {
       this.renderDisplayWeek();
@@ -67,10 +66,6 @@ export class MainCalendar {
           event.startDate >= weekStartDate && event.endDate <= weekEndDate
       )
       .forEach((event) => this.renderer.renderEvent(event));
-  }
-
-  onChange(onChangeCb) {
-    this.onChangeCb = onChangeCb;
   }
 
   clearBoard() {

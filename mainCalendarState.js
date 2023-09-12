@@ -1,4 +1,4 @@
-export class MainCalendarState {
+export class AppState {
   constructor(displayDate, events) {
     this.displayDate = displayDate ?? new Date();
     this.events = events ?? [];

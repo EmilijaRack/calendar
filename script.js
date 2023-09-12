@@ -3,16 +3,17 @@ import { createCalendarAPI } from "./localStorage.js";
 import { SideCalendar } from "./sideCalendar.js";
 import { MainCalendar } from "./mainCalendar.js";
 import { HeaderNavigation } from "./headerNavigation.js";
-import { MainCalendarState } from "./mainCalendarState.js";
+import { AppState } from "./mainCalendarState.js";
 
 const modalContainer = document.querySelector("#event-modal");
 const eventModal = new EventModal(modalContainer);
 const localStorageApi = createCalendarAPI({ delay: 0 });
-const sideCalendar = new SideCalendar(document.querySelector(".left-block"));
-const mainCalendarState = new MainCalendarState();
+new SideCalendar(document.querySelector(".left-block"));
+const mainCalendarState = new AppState();
 const mainCalendar = new MainCalendar(
   document.querySelector("#root"),
-  eventModal
+  eventModal,
+  localStorageApi
 );
 const headerNavigation = new HeaderNavigation(
   document.querySelector("#header-navigation-root")
@@ -20,7 +21,7 @@ const headerNavigation = new HeaderNavigation(
 
 window.addEventListener("load", async () => {
   await loadEvents();
-  render(0);
+  render();
 });
 
 headerNavigation.onNavigationChange((offset) => {
