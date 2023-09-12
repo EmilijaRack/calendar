@@ -13,9 +13,9 @@ export class MainCalendar {
       this.renderDisplayWeek();
     });
 
-    this.renderer.onEventClick((event) => {
+    this.renderer.onEventClick((id, event) => {
       if (confirm("Delete this event?")) {
-        this.deleteEventWhenConfirmed(event);
+        this.deleteEventWhenConfirmed(id, event);
       }
     });
 
@@ -77,21 +77,19 @@ export class MainCalendar {
     this.renderer.clearEventsFromBoard();
   }
 
-  deleteEventWhenConfirmed(id) {
-    {
-      return this.localStorageApi
-        .deleteEvent(id)
-        .then(() => {
-          this.renderer.clearEventsFromBoard();
-          this.onDeletingEventCb(id);
-        })
-        .catch((e) => {
-          if (confirm("Failed to remove an event. Try again?")) {
-            console.log(e);
-            return this.deleteEventWhenConfirmed(id);
-          }
-        });
-    }
+  deleteEventWhenConfirmed(id, event) {
+    return this.localStorageApi
+      .deleteEvent(id)
+      .then(() => {
+        this.renderer.clearEventsFromBoard();
+        this.onDeletingEventCb(id, event);
+      })
+      .catch((e) => {
+        if (confirm("Failed to remove an event. Try again?")) {
+          console.log(e);
+          return this.deleteEventWhenConfirmed(id, event);
+        }
+      });
   }
 
   onDeletingEvent(onDeletingEventCb) {

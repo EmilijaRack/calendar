@@ -44,23 +44,6 @@ function render() {
   );
 }
 
-// eventModal.onSave((event) => {
-//   eventModal.close();
-//   eventModal.hadleSubmit(event);
-//   return localStorageApi
-//     .createEvent(event)
-//     .then(() => {
-//       mainCalendarState.addEvent(event);
-//       mainCalendar.createEvent();
-//       mainCalendar.renderWeekEvents(mainCalendarState.events, event.startDate);
-//     })
-//     .catch(() => {
-//       if (confirm("Failed to save. Try again?")) {
-//         return onSave(event);
-//       }
-//     });
-// });
-
 function loadEvents() {
   return localStorageApi
     .listEvents()
@@ -90,7 +73,12 @@ document.addEventListener("click", (event) => {
   }
 });
 
-mainCalendar.onDeletingEvent((id) => {
+mainCalendar.onDeletingEvent((id, event) => {
+  mainCalendarState.addDisplayWeekOffset(
+    Math.abs(
+      mainCalendarState.displayDate.getDate() - event.startDate.getDate()
+    )
+  );
   mainCalendarState.removeEvent(id);
   mainCalendar.renderWeekEvents(
     mainCalendarState.events,
@@ -100,24 +88,12 @@ mainCalendar.onDeletingEvent((id) => {
 
 mainCalendar.onCreatingEvent((event) => {
   mainCalendarState.addEvent(event);
+  mainCalendarState.addDisplayWeekOffset(
+    Math.abs(
+      mainCalendarState.displayDate.getDate() - event.startDate.getDate()
+    )
+  );
+  headerNavigation.displayCurrentDate(mainCalendarState);
+  mainCalendar.renderDisplayWeek(mainCalendarState);
   mainCalendar.renderWeekEvents(mainCalendarState.events, event.startDate);
 });
-
-// function deleteEventWhenConfirmed(id) {
-//   return localStorageApi
-//     .deleteEvent(id)
-//     .then(() => {
-//       mainCalendar.deleteEvent();
-//       mainCalendarState.removeEvent(id);
-//       mainCalendar.renderWeekEvents(
-//         mainCalendarState.events,
-//         mainCalendarState.displayDate
-//       );
-//     })
-//     .catch((e) => {
-//       if (confirm("Failed to remove an event. Try again?")) {
-//         console.log(e);
-//         return deleteEventWhenConfirmed();
-//       }
-//     });
-// }

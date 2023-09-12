@@ -20,7 +20,7 @@ export class Renderer {
     for (let [start, end] of this.calcEventLengthInDays(event)) {
       const eventDataContainer = document.createElement("div");
       eventDataContainer.addEventListener("click", () =>
-        this.onEventClickFn(event.id)
+        this.onEventClickFn(event.id, event)
       );
       eventDataContainer.setAttribute("class", "event");
       eventDataContainer.innerText = `${event.title}, ${event.startDate
