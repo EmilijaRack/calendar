@@ -9,15 +9,13 @@ export class EventModal {
     this.eventTitle.addEventListener("change", () => {
       if (this.isTitleCorrect()) {
         this.eventTitle.classList.remove("noTitleError");
-        this.titleErrorMsg && this.titleErrorMsg.remove();
-        this.titleErrorMsg = undefined;
+        this.removeTitleError();
       }
     });
     this.endTime.addEventListener("change", () => {
       if (this.isTimeCorrect()) {
         this.endTime.classList.remove("endDateError");
-        this.dateErrorMsg && this.dateErrorMsg.remove();
-        this.dateErrorMsg = undefined;
+        this.removeDateError();
       }
     });
     root.querySelector(".save").addEventListener("click", () => {
@@ -33,6 +31,16 @@ export class EventModal {
         )
       );
     });
+  }
+
+  removeDateError() {
+    this.dateErrorMsg && this.dateErrorMsg.remove();
+    this.dateErrorMsg = undefined;
+  }
+
+  removeTitleError() {
+    this.titleErrorMsg && this.titleErrorMsg.remove();
+    this.titleErrorMsg = undefined;
   }
 
   open() {
@@ -54,6 +62,8 @@ export class EventModal {
 
   close() {
     this.root.style.display = "none";
+    this.removeDateError();
+    this.removeTitleError();
   }
 
   handleFormErrors() {
