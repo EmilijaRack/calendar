@@ -207,13 +207,8 @@
 .endDateError {
   color: var(--textfield-error);
 }
-
-.dateErrorMsg {
-  padding: 0 8px;
-}
-
-.dateErrorMsg,
-.titleErrorMsg {
+/* TODO: fix gaps between buttons */
+.errorMsg {
   font-size: 12px;
   color: var(--textfield-error);
 }
