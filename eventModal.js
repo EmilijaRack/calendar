@@ -51,8 +51,8 @@ export class EventModal {
     const endTime = new Date();
     endTime.setMinutes(currentTime.getMinutes() + 30);
     this.eventTitle.value = "";
-    this.startTime.value = dateToString(currentTime);
-    this.endTime.value = dateToString(endTime);
+    this.startTime.value = this.dateToString(currentTime);
+    this.endTime.value = this.dateToString(endTime);
   }
 
   dateToString(date) {
