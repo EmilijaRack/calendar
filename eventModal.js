@@ -48,16 +48,18 @@ export class EventModal {
     this.endTime.classList.remove("endDateError");
     this.root.style.display = "flex";
     const currentTime = new Date();
-    currentTime.setMinutes(
-      currentTime.getMinutes() - currentTime.getTimezoneOffset()
-    );
     const endTime = new Date();
-    endTime.setMinutes(
-      currentTime.getMinutes() + 30 - currentTime.getTimezoneOffset()
-    );
+    endTime.setMinutes(currentTime.getMinutes() + 30);
     this.eventTitle.value = "";
-    this.startTime.value = currentTime.toISOString().slice(0, 16);
-    this.endTime.value = endTime.toISOString().slice(0, 16);
+    this.startTime.value = dateToString(currentTime);
+    this.endTime.value = dateToString(endTime);
+  }
+
+  dateToString(date) {
+    return date.toLocaleString("lt-LT", {
+      timeStyle: "short",
+      dateStyle: "medium",
+    });
   }
 
   close() {
