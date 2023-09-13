@@ -16,14 +16,18 @@ openModalButton.addEventListener("click", (event) => {
   eventModal.open();
 });
 
-eventModal.onSave((event) => {
-  renderer.renderEvent(event);
-  eventModal.close();
-  return localStorageApi.createEvent(event).catch(() => {
-    if (confirm("Failed to save. Try again?")) {
-      return onSave(event);
-    }
-  });
+eventModal.onSave(function saveEvent(event) {
+  return localStorageApi
+    .createEvent(event)
+    .then(() => {
+      renderer.renderEvent(event);
+      eventModal.close();
+    })
+    .catch(() => {
+      if (confirm("Failed to save. Try again?")) {
+        return saveEvent(event);
+      }
+    });
 });
 
 function loadEvents() {
