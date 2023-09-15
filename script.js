@@ -1,35 +1,17 @@
+import { Event } from "./event.js";
 import { EventModal } from "./eventModal.js";
+import { Renderer } from "./renderer.js";
 import { createCalendarAPI } from "./localStorage.js";
-import { SideCalendar } from "./sideCalendar.js";
-import { MainCalendar } from "./mainCalendar.js";
-import { HeaderNavigation } from "./headerNavigation.js";
-import { AppState } from "./mainCalendarState.js";
 
+const root = document.querySelector("#root");
 const modalContainer = document.querySelector("#event-modal");
+const openModalButton = document.querySelector(".btn-event");
+const todayButton = document.querySelector(".btn-date");
+const closeModalButton = document.querySelector(".close-btn");
 const eventModal = new EventModal(modalContainer);
 const localStorageApi = createCalendarAPI({ delay: 0 });
-new SideCalendar(document.querySelector(".left-block"));
-const mainCalendarState = new AppState();
-const mainCalendar = new MainCalendar(
-  document.querySelector("#root"),
-  eventModal,
-  localStorageApi
-);
-const headerNavigation = new HeaderNavigation(
-  document.querySelector("#header-navigation-root")
-);
-
-window.addEventListener("load", async () => {
-  await loadEvents();
-  render();
-});
-
-headerNavigation.onNavigationChange((offset) => {
-  mainCalendarState.addDisplayWeekOffset(offset);
-  render();
-});
-
-document.querySelector(".btn-event").addEventListener("click", (event) => {
+const renderer = new Renderer(root);
+openModalButton.addEventListener("click", (event) => {
   event.stopPropagation();
   eventModal.open();
 });
@@ -51,6 +33,7 @@ function loadEvents() {
     .then((events) => {
       mainCalendarState.updateEvents(
         events.map((event) => ({
+
           ...event,
           startDate: new Date(event.startDate),
           endDate: new Date(event.endDate),
@@ -60,7 +43,7 @@ function loadEvents() {
     .catch((e) => {
       console.log(e);
       if (confirm("Failed to load. Try again?")) {
-        return loadEvents(newWeekDate);
+        return loadEvents();
       }
     });
 }

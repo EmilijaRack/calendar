@@ -3,29 +3,22 @@ import { Event } from "./event.js";
 export class EventModal {
   constructor(root) {
     this.root = root;
-    this.dateErrorMsg = document.createElement("p");
-    this.titleErrorMsg = document.createElement("p");
-    this.dateErrorMsg.setAttribute("class", "dateErrorMsg");
-    this.titleErrorMsg.setAttribute("class", "titleErrorMsg");
-    this.timeContainer = document.querySelector(".time-input");
-    this.saveBtn = root.querySelector(".save");
     this.startTime = root.querySelector(".start-time");
     this.endTime = root.querySelector(".end-time");
     this.eventTitle = root.querySelector(".form-body__add-item");
-
     this.eventTitle.addEventListener("change", () => {
       if (this.isTitleCorrect()) {
         this.eventTitle.classList.remove("noTitleError");
-        this.titleErrorMsg.remove();
+        this.removeTitleError();
       }
     });
     this.endTime.addEventListener("change", () => {
       if (this.isTimeCorrect()) {
         this.endTime.classList.remove("endDateError");
-        this.dateErrorMsg.remove();
+        this.removeDateError();
       }
     });
-    this.saveBtn.addEventListener("click", () => {
+    root.querySelector(".save").addEventListener("click", () => {
       if (!this.isFormCorrect()) {
         this.handleFormErrors();
         return;
@@ -38,10 +31,16 @@ export class EventModal {
         )
       );
     });
+  }
 
-    root
-      .querySelector(".close-btn")
-      .addEventListener("click", () => this.close());
+  removeDateError() {
+    this.dateErrorMsg && this.dateErrorMsg.remove();
+    this.dateErrorMsg = undefined;
+  }
+
+  removeTitleError() {
+    this.titleErrorMsg && this.titleErrorMsg.remove();
+    this.titleErrorMsg = undefined;
   }
 
   open() {
@@ -49,35 +48,47 @@ export class EventModal {
     this.endTime.classList.remove("endDateError");
     this.root.style.display = "flex";
     const currentTime = new Date();
-    currentTime.setMinutes(
-      currentTime.getMinutes() - currentTime.getTimezoneOffset()
-    );
     const endTime = new Date();
-    endTime.setMinutes(
-      currentTime.getMinutes() + 30 - currentTime.getTimezoneOffset()
-    );
+    endTime.setMinutes(currentTime.getMinutes() + 30);
     this.eventTitle.value = "";
-    this.startTime.value = currentTime.toISOString().slice(0, 16);
-    this.endTime.value = endTime.toISOString().slice(0, 16);
+    this.startTime.value = this.dateToString(currentTime);
+    this.endTime.value = this.dateToString(endTime);
+  }
+
+  dateToString(date) {
+    return date.toLocaleString("lt-LT", {
+      timeStyle: "short",
+      dateStyle: "medium",
+    });
   }
 
   close() {
     this.root.style.display = "none";
+    this.removeDateError();
+    this.removeTitleError();
   }
 
   handleFormErrors() {
-    if (!this.isTitleCorrect()) {
+    if (!this.isTitleCorrect() && !this.titleErrorMsg) {
       this.eventTitle.classList.add("noTitleError");
-      this.titleErrorMsg.innerText = "Please, add a Title";
+      this.titleErrorMsg = this.createError("Please, add a Title");
       this.eventTitle.after(this.titleErrorMsg);
     }
 
-    if (!this.isTimeCorrect()) {
+    if (!this.isTimeCorrect() && !this.dateErrorMsg) {
       this.endTime.classList.add("endDateError");
-      this.dateErrorMsg.innerHTML =
-        "The end-date should be later than start-date";
+      this.dateErrorMsg = this.createError(
+        "The end-date should be later than start-date"
+      );
       this.endTime.after(this.dateErrorMsg);
     }
+  }
+
+  createError(text) {
+    const errorMsg = document.createElement("p");
+    errorMsg.classList.add("errorMsg");
+    errorMsg.innerText = text;
+    return errorMsg;
   }
 
   isTitleCorrect() {

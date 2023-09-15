@@ -139,6 +139,7 @@ body {
 .calendar-dates__cells > li {
   width: 22px;
   height: 22px;
+
   margin-right: 3.35px;
   margin-left: 3.35px;
   display: flex;
@@ -148,7 +149,6 @@ body {
   cursor: pointer;
   border-radius: 50%;
 }
-
 .calendar-dates__cell:hover,
 .btn-arrow:hover {
   background-color: var(--chip-hover);

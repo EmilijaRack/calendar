@@ -17,10 +17,10 @@ export class Renderer {
   }
 
   renderEvent(event) {
-    for (let [start, end] of this.calcEventLengthInDays(event)) {
+    for (let [start, end] of this.calcEventRanges(event)) {
       const eventDataContainer = document.createElement("div");
       eventDataContainer.addEventListener("click", () =>
-        this.onEventClickFn(event.id, event)
+        this.onEventClickFn(event.id)
       );
       eventDataContainer.setAttribute("class", "event");
       eventDataContainer.innerText = `${event.title}, ${event.startDate
@@ -40,7 +40,7 @@ export class Renderer {
     });
   }
 
-  calcEventLengthInDays({ startDate, endDate }) {
+  calcEventRanges({ startDate, endDate }) {
     const result = [];
     let eventStart = startDate.getTime();
     let eventEnd = new Date(eventStart).setHours(23, 59, 59, 999);
