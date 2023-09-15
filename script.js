@@ -16,31 +16,29 @@ openModalButton.addEventListener("click", (event) => {
   eventModal.open();
 });
 
-eventModal.onSave(function saveEvent(event) {
-  return localStorageApi
-    .createEvent(event)
-    .then(() => {
-      renderer.renderEvent(event);
-      eventModal.close();
-    })
-    .catch(() => {
-      if (confirm("Failed to save. Try again?")) {
-        return saveEvent(event);
-      }
-    });
-});
+function render() {
+  mainCalendar.clearBoard();
+  headerNavigation.displayCurrentDate(mainCalendarState);
+  mainCalendar.renderDisplayWeek(mainCalendarState);
+
+  mainCalendar.renderWeekEvents(
+    mainCalendarState.events,
+    mainCalendarState.displayDate
+  );
+}
 
 function loadEvents() {
   return localStorageApi
     .listEvents()
-    .then((eventsWithStringsAsDates) => {
-      eventsWithStringsAsDates
-        .map((event) => ({
+    .then((events) => {
+      mainCalendarState.updateEvents(
+        events.map((event) => ({
+
           ...event,
           startDate: new Date(event.startDate),
           endDate: new Date(event.endDate),
         }))
-        .forEach(renderer.renderEvent.bind(renderer));
+      );
     })
     .catch((e) => {
       console.log(e);
@@ -49,12 +47,6 @@ function loadEvents() {
       }
     });
 }
-
-window.addEventListener("load", loadEvents());
-
-closeModalButton.addEventListener("click", () => {
-  eventModal.close();
-});
 
 document.addEventListener("click", (event) => {
   if (
@@ -65,24 +57,27 @@ document.addEventListener("click", (event) => {
   }
 });
 
-todayButton.addEventListener("click", (event) => {
-  event.stopPropagation();
+mainCalendar.onDeletingEvent((id, event) => {
+  mainCalendarState.addDisplayWeekOffset(
+    Math.abs(
+      mainCalendarState.displayDate.getDate() - event.startDate.getDate()
+    )
+  );
+  mainCalendarState.removeEvent(id);
+  mainCalendar.renderWeekEvents(
+    mainCalendarState.events,
+    mainCalendarState.displayDate
+  );
 });
 
-renderer.onEventClick((event) => {
-  if (confirm("Delete this event?")) {
-    deleteEventWhenConfirmed(event);
-  }
+mainCalendar.onCreatingEvent((event) => {
+  mainCalendarState.addEvent(event);
+  mainCalendarState.addDisplayWeekOffset(
+    Math.abs(
+      mainCalendarState.displayDate.getDate() - event.startDate.getDate()
+    )
+  );
+  headerNavigation.displayCurrentDate(mainCalendarState);
+  mainCalendar.renderDisplayWeek(mainCalendarState);
+  mainCalendar.renderWeekEvents(mainCalendarState.events, event.startDate);
 });
-
-function deleteEventWhenConfirmed(id) {
-  return localStorageApi
-    .deleteEvent(id)
-    .then(renderer.clearEventsFromBoard(), loadEvents())
-    .catch((e) => {
-      if (confirm("Failed to remove an event. Try again?")) {
-        console.log(e);
-        return deleteEventWhenConfirmed();
-      }
-    });
-}

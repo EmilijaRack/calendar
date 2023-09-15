@@ -126,18 +126,20 @@ body {
 .btn-arrow-wrapper {
   display: flex;
   justify-content: space-between;
-  min-width: 52px;
+  min-width: 50px;
 }
 
 .calendar-dates__cells {
   display: grid;
-  grid-template-columns: repeat(6, auto);
+  grid-template-columns: repeat(7, auto);
   cursor: pointer;
+  height: 200px;
 }
 
 .calendar-dates__cells > li {
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
+
   margin-right: 3.35px;
   margin-left: 3.35px;
   display: flex;
@@ -147,8 +149,7 @@ body {
   cursor: pointer;
   border-radius: 50%;
 }
-
-.calendar-dates__cells > li:hover,
+.calendar-dates__cell:hover,
 .btn-arrow:hover {
   background-color: var(--chip-hover);
 }
@@ -244,4 +245,13 @@ body {
   border: 2px solid var(--secondary-variant);
   position: absolute;
   z-index: 1;
+}
+
+.current-day-styling {
+  background-color: var(--primary-variant);
+  color: var(--surface);
+}
+
+.current-day-styling:hover {
+  background-color: var(--on-secondary-variant);
 }
