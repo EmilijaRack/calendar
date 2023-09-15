@@ -1,6 +1,5 @@
 import { isToday } from "./dateHelpers.js";
 import { Renderer } from "./renderer.js";
-import { createCalendarAPI } from "./localStorage.js";
 
 export class MainCalendar {
   constructor(root, eventModal, localStorageApi) {
