@@ -4,34 +4,44 @@ import { MainCalendar } from "./mainCalendar.js";
 import { AppState } from "./mainCalendarState.js";
 import { HeaderNavigation } from "./headerNavigation.js";
 import { SideCalendar } from "./sideCalendar.js";
+import { Event } from "./event.js";
 
-const modalContainer = document.querySelector("#event-modal");
+const modalContainer = document.querySelector<HTMLElement>("#event-modal");
+
+if (!modalContainer) throw new Error("Not an HTMLEleent");
 const eventModal = new EventModal(modalContainer);
+
 const localStorageApi = createCalendarAPI({ delay: 0 });
 const mainCalendarState = new AppState();
-const mainCalendar = new MainCalendar(
-  document.querySelector("#root"),
-  eventModal,
-  localStorageApi
-);
+const rootElement = document.querySelector<HTMLElement>("#root");
+if (!rootElement) throw new Error("Not an HTMLEleent");
+const mainCalendar = new MainCalendar(rootElement, eventModal, localStorageApi);
 
 window.addEventListener("load", async () => {
   await loadEvents();
   render();
 });
 
-new SideCalendar(document.querySelector(".left-block"));
+const leftBlock = document.querySelector<HTMLElement>(".left-block");
+if (!leftBlock) throw new Error("Not an HTMLEleent");
+new SideCalendar(leftBlock);
 
-document.querySelector(".btn-event").addEventListener("click", (event) => {
+document.querySelector(".btn-event")?.addEventListener("click", (event) => {
   event.stopPropagation();
   eventModal.open();
 });
 
-const headerNavigation = new HeaderNavigation(
-  document.querySelector("#header-navigation-root")
-);
+document
+  .querySelector(".close-btn")
+  ?.addEventListener("click", () => eventModal.close());
 
-headerNavigation.onNavigationChange((offset) => {
+const headerNavigationRoot = document.querySelector<HTMLElement>(
+  "#header-navigation-root"
+);
+if (!headerNavigationRoot) throw new Error("Not an HTMLEleent");
+const headerNavigation = new HeaderNavigation(headerNavigationRoot);
+
+headerNavigation.onNavigationChange((offset: number) => {
   mainCalendarState.addDisplayWeekOffset(offset);
   render();
 });
@@ -47,12 +57,12 @@ function render() {
   );
 }
 
-function loadEvents() {
+function loadEvents(): Promise<void> {
   return localStorageApi
     .listEvents()
-    .then((events) => {
+    .then((events: Event[]) => {
       mainCalendarState.updateEvents(
-        events.map((event) => ({
+        events.map((event: Event) => ({
           ...event,
           startDate: new Date(event.startDate),
           endDate: new Date(event.endDate),
@@ -69,7 +79,8 @@ function loadEvents() {
 
 document.addEventListener("click", (event) => {
   if (
-    !modalContainer.contains(event.target) &&
+    event.target &&
+    !modalContainer?.contains(event.target as Node) &&
     event.target !== modalContainer
   ) {
     eventModal.close();

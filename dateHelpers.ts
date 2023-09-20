@@ -1,4 +1,4 @@
-export function isToday(date) {
+export function isToday(date: Date) {
   const today = new Date();
   return (
     date.getDate() === today.getDate() &&
@@ -6,7 +6,7 @@ export function isToday(date) {
     date.getFullYear() === today.getFullYear()
   );
 }
-export function setDate(baseDate, i) {
+export function setDate(baseDate: Date, i: number) {
   const date = new Date(baseDate);
   date.setDate(i);
   return date;

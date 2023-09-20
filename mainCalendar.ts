@@ -1,37 +1,47 @@
 import { isToday } from "./dateHelpers.js";
 import { Renderer } from "./renderer.js";
+import { Event } from "./event.js";
+import { EventModal } from "./eventModal.js";
+import { AppState } from "./mainCalendarState.js";
 
 export class MainCalendar {
-  constructor(root, eventModal, localStorageApi) {
+  private renderer: Renderer;
+  private days: NodeListOf<HTMLDivElement>;
+  private localStorageApi;
+
+  private onDeletingEventCb: (id: number, event: Event) => void = () => {};
+  private onCreatingEventCb: (event: Event) => void = () => {};
+
+  constructor(root: HTMLElement, eventModal: EventModal, localStorageApi: any) {
     this.renderer = new Renderer(root);
-    this.days = root.querySelectorAll(".week-days__cells--h1");
+    this.days = root.querySelectorAll<HTMLDivElement>(".week-days__cells--h1");
     this.localStorageApi = localStorageApi;
 
     window.addEventListener("load", () => {
       this.renderDisplayWeek();
     });
 
-    this.renderer.onEventClick((id, event) => {
+    this.renderer.onEventClick((id: number, event: Event) => {
       if (confirm("Delete this event?")) {
         this.deleteEventWhenConfirmed(id, event);
       }
     });
 
-    eventModal.onSave((event) => {
+    eventModal.onSave((event: Event) => {
       eventModal.close();
       this.createEvent(event);
     });
   }
 
-  addHighlight(element) {
+  addHighlight(element: HTMLElement) {
     element.classList.add("current-day-styling");
   }
 
-  removeHighlight(element) {
+  removeHighlight(element: HTMLElement) {
     element.classList.remove("current-day-styling");
   }
 
-  renderDisplayWeek(state) {
+  renderDisplayWeek(state?: AppState) {
     if (!state) return;
 
     for (let i = 0; i < this.days.length; i++) {
@@ -42,7 +52,7 @@ export class MainCalendar {
         state.displayDate.getMonth(),
         state.displayDate.getDate() - state.displayDate.getDay() + i
       );
-      currentCell.innerHTML = currentDate.getDate();
+      currentCell.innerHTML = currentDate.getDate().toString();
 
       if (isToday(currentDate)) {
         this.addHighlight(currentCell);
@@ -52,7 +62,7 @@ export class MainCalendar {
     }
   }
 
-  renderWeekEvents(events, newWeekDate) {
+  renderWeekEvents(events: Event[], newWeekDate: Date) {
     const weekStartDate = new Date(newWeekDate.getTime());
     weekStartDate.setDate(newWeekDate.getDate() - newWeekDate.getDay());
 
@@ -71,14 +81,14 @@ export class MainCalendar {
     this.renderer.clearEventsFromBoard();
   }
 
-  deleteEventWhenConfirmed(id, event) {
+  deleteEventWhenConfirmed(id: number, event: Event) {
     return this.localStorageApi
       .deleteEvent(id)
       .then(() => {
         this.renderer.clearEventsFromBoard();
         this.onDeletingEventCb(id, event);
       })
-      .catch((e) => {
+      .catch((e: any) => {
         if (confirm("Failed to remove an event. Try again?")) {
           console.log(e);
           return this.deleteEventWhenConfirmed(id, event);
@@ -86,11 +96,11 @@ export class MainCalendar {
       });
   }
 
-  onDeletingEvent(onDeletingEventCb) {
+  onDeletingEvent(onDeletingEventCb: (id: number, event: Event) => void) {
     this.onDeletingEventCb = onDeletingEventCb;
   }
 
-  createEvent(event) {
+  createEvent(event: Event) {
     return this.localStorageApi
       .createEvent(event)
       .then(() => {
@@ -104,7 +114,7 @@ export class MainCalendar {
       });
   }
 
-  onCreatingEvent(onCreatingEventCb) {
+  onCreatingEvent(onCreatingEventCb: (event: Event) => void) {
     this.onCreatingEventCb = onCreatingEventCb;
   }
 }
