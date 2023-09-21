@@ -1,5 +1,12 @@
 import { Event } from "./event";
 
+export interface CalendarApi {
+  createEvent: (event: Event) => Promise<any>;
+  updateEvent: (id: number, updatedEvent: Event) => Promise<any>;
+  deleteEvent: (id: number) => Promise<any>;
+  listEvents: () => Promise<any[]>;
+}
+
 export function createCalendarAPI(config: { delay: number }) {
   const delay = config.delay;
 
@@ -32,7 +39,7 @@ export function createCalendarAPI(config: { delay: number }) {
       new Promise((resolve, reject) => {
         setTimeout(() => {
           const events = getEvents();
-          const index = events.findIndex((e: Event) => e.id === id);
+          const index = events.findIndex((e: any) => e.id === id);
           if (index !== -1) {
             events[index] = { ...events[index], ...updatedEvent };
             setEvents(events);
@@ -46,7 +53,7 @@ export function createCalendarAPI(config: { delay: number }) {
       new Promise((resolve, reject) => {
         setTimeout(() => {
           const events = getEvents();
-          const index = events.findIndex((e: Event) => e.id === id);
+          const index = events.findIndex((e: any) => e.id === id);
           if (index !== -1) {
             events.splice(index, 1);
             setEvents(events);
@@ -57,7 +64,7 @@ export function createCalendarAPI(config: { delay: number }) {
         }, getRandomDelay());
       }),
     listEvents: () =>
-      new Promise<Event[]>((resolve) => {
+      new Promise<any[]>((resolve) => {
         setTimeout(() => {
           resolve(getEvents());
         }, getRandomDelay());
