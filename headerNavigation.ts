@@ -6,6 +6,10 @@ export enum NavDirection {
   Next,
 }
 
+function unreachable(param: never) {
+  throw new Error(param);
+}
+
 export class HeaderNavigation {
   private currentDateDisplay: HTMLElement;
   private todayButton: HTMLButtonElement;
@@ -37,14 +41,14 @@ export class HeaderNavigation {
     });
   }
 
-  private getDirection(direction?: NavDirection) {
+  private getDirection(direction: NavDirection) {
     switch (direction) {
       case NavDirection.Next:
         return 7;
       case NavDirection.Prev:
         return -7;
       default:
-        return undefined;
+        unreachable(direction);
     }
   }
 
