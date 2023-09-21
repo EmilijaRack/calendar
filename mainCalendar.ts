@@ -3,18 +3,23 @@ import { Renderer } from "./renderer.js";
 import { Event } from "./event.js";
 import { EventModal } from "./eventModal.js";
 import { AppState } from "./mainCalendarState.js";
+import { CalendarApi } from "./localStorage.js";
 
 export class MainCalendar {
   private renderer: Renderer;
-  private days: NodeListOf<HTMLDivElement>;
+  private days: NodeListOf<HTMLElement>;
   private localStorageApi;
 
   private onDeletingEventCb: (id: number, event: Event) => void = () => {};
   private onCreatingEventCb: (event: Event) => void = () => {};
 
-  constructor(root: HTMLElement, eventModal: EventModal, localStorageApi: any) {
+  constructor(
+    root: HTMLElement,
+    eventModal: EventModal,
+    localStorageApi: CalendarApi
+  ) {
     this.renderer = new Renderer(root);
-    this.days = root.querySelectorAll<HTMLDivElement>(".week-days__cells--h1");
+    this.days = root.querySelectorAll<HTMLElement>(".week-days__cells--h1");
     this.localStorageApi = localStorageApi;
 
     window.addEventListener("load", () => {
@@ -33,11 +38,11 @@ export class MainCalendar {
     });
   }
 
-  addHighlight(element: HTMLElement) {
+  private addHighlight(element: HTMLElement) {
     element.classList.add("current-day-styling");
   }
 
-  removeHighlight(element: HTMLElement) {
+  private removeHighlight(element: HTMLElement) {
     element.classList.remove("current-day-styling");
   }
 
@@ -81,14 +86,14 @@ export class MainCalendar {
     this.renderer.clearEventsFromBoard();
   }
 
-  deleteEventWhenConfirmed(id: number, event: Event) {
+  private deleteEventWhenConfirmed(id: number, event: Event): Promise<void> {
     return this.localStorageApi
       .deleteEvent(id)
       .then(() => {
         this.renderer.clearEventsFromBoard();
         this.onDeletingEventCb(id, event);
       })
-      .catch((e: any) => {
+      .catch((e: Error) => {
         if (confirm("Failed to remove an event. Try again?")) {
           console.log(e);
           return this.deleteEventWhenConfirmed(id, event);
@@ -100,7 +105,7 @@ export class MainCalendar {
     this.onDeletingEventCb = onDeletingEventCb;
   }
 
-  createEvent(event: Event) {
+  private createEvent(event: Event): Promise<void> {
     return this.localStorageApi
       .createEvent(event)
       .then(() => {

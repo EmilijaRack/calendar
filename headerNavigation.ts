@@ -1,41 +1,59 @@
-import { AppStateType } from "./mainCalendarState";
+import { AppState } from "./mainCalendarState";
+import { assertHTMLElement } from "./utils.js";
 
-const PREV = -7;
-const NEXT = 7;
+export enum NavDirection {
+  Prev,
+  Next,
+}
 
 export class HeaderNavigation {
-  private currentDateDisplay: HTMLElement | null;
-  private todayButton: HTMLButtonElement | null;
+  private currentDateDisplay: HTMLElement;
+  private todayButton: HTMLButtonElement;
   private onNavigationChangeCb: (offset: number) => void;
 
   constructor(root: HTMLElement) {
-    this.currentDateDisplay = root.querySelector(".date");
-    this.todayButton = root.querySelector(".btn-date");
+    this.currentDateDisplay = assertHTMLElement<HTMLElement>(".date", root);
+    this.todayButton = assertHTMLElement<HTMLButtonElement>(".btn-date", root);
     this.onNavigationChangeCb = (): void => {};
 
-    root
-      .querySelector("#top-left-navigation")
-      ?.addEventListener("click", () => {
-        this.onNavigationChangeCb && this.onNavigationChangeCb(PREV);
-      });
+    assertHTMLElement<HTMLButtonElement>(
+      "#top-left-navigation",
+      root
+    ).addEventListener("click", () => {
+      const prev = this.getDirection(NavDirection.Prev);
+      if (prev) this.onNavigationChangeCb && this.onNavigationChangeCb(prev);
+    });
 
-    root
-      .querySelector("#top-right-navigation")
-      ?.addEventListener("click", () => {
-        this.onNavigationChangeCb && this.onNavigationChangeCb(NEXT);
-      });
+    assertHTMLElement<HTMLButtonElement>(
+      "#top-right-navigation",
+      root
+    ).addEventListener("click", () => {
+      const next = this.getDirection(NavDirection.Next);
+      if (next) this.onNavigationChangeCb && this.onNavigationChangeCb(next);
+    });
 
-    this.todayButton?.addEventListener("click", (event) => {
+    this.todayButton.addEventListener("click", (event) => {
       event.stopPropagation();
     });
+  }
+
+  private getDirection(direction?: NavDirection) {
+    switch (direction) {
+      case NavDirection.Next:
+        return 7;
+      case NavDirection.Prev:
+        return -7;
+      default:
+        return undefined;
+    }
   }
 
   onNavigationChange(onNavigationChangeCb: (offset: number) => void) {
     this.onNavigationChangeCb = onNavigationChangeCb;
   }
 
-  displayCurrentDate(state: AppStateType) {
-    this.currentDateDisplay!.innerHTML = `${state.displayDate.toLocaleString(
+  displayCurrentDate(state: AppState) {
+    this.currentDateDisplay.innerHTML = `${state.displayDate.toLocaleString(
       "default",
       { month: "long" }
     )} ${state.displayDate.getFullYear()}`;

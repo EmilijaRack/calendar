@@ -1,20 +1,28 @@
 import { EventModal } from "./eventModal.js";
-import { createCalendarAPI } from "./localStorage.js";
+import { CalendarApi, createCalendarAPI } from "./localStorage.js";
 import { MainCalendar } from "./mainCalendar.js";
 import { AppState } from "./mainCalendarState.js";
 import { HeaderNavigation } from "./headerNavigation.js";
 import { SideCalendar } from "./sideCalendar.js";
 import { Event } from "./event.js";
+import { assertHTMLElement } from "./utils.js";
 
-const modalContainer = document.querySelector<HTMLElement>("#event-modal");
+const modalContainer = assertHTMLElement<HTMLElement>(
+  "#event-modal",
+  document.documentElement
+);
+document.querySelector<HTMLElement>("#event-modal");
 
-if (!modalContainer) throw new Error("Not an HTMLEleent");
 const eventModal = new EventModal(modalContainer);
-
-const localStorageApi = createCalendarAPI({ delay: 0 });
+const localStorageApi: CalendarApi = createCalendarAPI({ delay: 0 });
 const mainCalendarState = new AppState();
-const rootElement = document.querySelector<HTMLElement>("#root");
-if (!rootElement) throw new Error("Not an HTMLEleent");
+
+const rootElement = assertHTMLElement<HTMLElement>(
+  "#root",
+  document.documentElement
+);
+document.querySelector<HTMLElement>("#root");
+
 const mainCalendar = new MainCalendar(rootElement, eventModal, localStorageApi);
 
 window.addEventListener("load", async () => {
@@ -22,26 +30,28 @@ window.addEventListener("load", async () => {
   render();
 });
 
-const leftBlock = document.querySelector<HTMLElement>(".left-block");
-if (!leftBlock) throw new Error("Not an HTMLEleent");
-new SideCalendar(leftBlock);
+new SideCalendar(
+  assertHTMLElement<HTMLElement>(".left-block", document.documentElement)
+);
 
 document.querySelector(".btn-event")?.addEventListener("click", (event) => {
   event.stopPropagation();
   eventModal.open();
 });
 
-document
-  .querySelector(".close-btn")
-  ?.addEventListener("click", () => eventModal.close());
+assertHTMLElement<HTMLElement>(
+  ".close-btn",
+  document.documentElement
+).addEventListener("click", () => eventModal.close());
 
-const headerNavigationRoot = document.querySelector<HTMLElement>(
-  "#header-navigation-root"
+const headerNavigationRoot = assertHTMLElement<HTMLElement>(
+  "#header-navigation-root",
+  document.documentElement
 );
-if (!headerNavigationRoot) throw new Error("Not an HTMLEleent");
+
 const headerNavigation = new HeaderNavigation(headerNavigationRoot);
 
-headerNavigation.onNavigationChange((offset: number) => {
+headerNavigation.onNavigationChange((offset) => {
   mainCalendarState.addDisplayWeekOffset(offset);
   render();
 });
