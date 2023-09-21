@@ -1,25 +1,24 @@
 import { isToday, setDate } from "./dateHelpers.js";
 import { SideCalendarState } from "./sideCalendarState.js";
+import { assertHTMLElement } from "./utils.js";
 
 const MAX_NUMBER_OF_CELLS = 42;
 
 enum NavDirection {
   Prev,
   Next,
-  notSpecified,
-}
-
-function unreachable(param: never) {
-  throw new Error(param);
 }
 
 export class SideCalendar {
-  private currentDateDisplay?: HTMLElement | null;
-  private cells?: NodeListOf<HTMLElement> | null;
-  private state?: SideCalendarState;
+  private currentDateDisplay: HTMLElement;
+  private cells: NodeListOf<HTMLElement>;
+  private state: SideCalendarState;
 
   constructor(root: HTMLElement) {
-    this.currentDateDisplay = root.querySelector(".current-date");
+    this.currentDateDisplay = assertHTMLElement<HTMLElement>(
+      ".current-date",
+      root
+    );
     this.cells = root.querySelectorAll(".calendar-dates__cell");
     this.state = new SideCalendarState(new Date());
 
@@ -36,33 +35,28 @@ export class SideCalendar {
       });
 
     window.addEventListener("load", () => {
-      this.initialNavigation(NavDirection.notSpecified);
+      this.initialNavigation();
     });
   }
 
-  initialNavigation(direction: NavDirection) {
+  private initialNavigation(direction?: NavDirection) {
     this.updateDisplayDate(direction);
     this.displayCurrentDate();
     this.renderSideCalendarCells();
   }
 
-  getDirection(direction: NavDirection) {
-    const dir = (() => {
-      switch (direction) {
-        case NavDirection.Next:
-          return 1;
-        case NavDirection.Prev:
-          return -1;
-        case NavDirection.notSpecified:
-          return 0;
-        default:
-          unreachable(direction);
-      }
-    })();
-    return dir;
+  private getDirection(direction?: NavDirection) {
+    switch (direction) {
+      case NavDirection.Next:
+        return 1;
+      case NavDirection.Prev:
+        return -1;
+      default:
+        return undefined;
+    }
   }
 
-  updateDisplayDate(direction: NavDirection) {
+  private updateDisplayDate(direction?: NavDirection) {
     const newDirection = this.getDirection(direction);
     if (this.state && newDirection) {
       this.state = new SideCalendarState(
@@ -74,16 +68,14 @@ export class SideCalendar {
     }
   }
 
-  displayCurrentDate() {
-    if (this.currentDateDisplay) {
-      this.currentDateDisplay.innerHTML = `${this.state?.displayDate.toLocaleString(
-        "default",
-        { month: "long" }
-      )} ${this.state?.displayDate.getFullYear()}`;
-    }
+  private displayCurrentDate() {
+    this.currentDateDisplay.innerHTML = `${this.state?.displayDate.toLocaleString(
+      "default",
+      { month: "long" }
+    )} ${this.state?.displayDate.getFullYear()}`;
   }
 
-  renderCurrentMonthCells() {
+  private renderCurrentMonthCells() {
     if (this.state && this.cells) {
       for (let i = 1; i <= this.state.displayMonthLength; i++) {
         const currentCell = this.cells[i + this.state.monthStartWeekDay - 1];
@@ -100,15 +92,15 @@ export class SideCalendar {
     }
   }
 
-  addHighlight(element: HTMLElement) {
+  private addHighlight(element: HTMLElement) {
     element.classList.add("current-day-styling");
   }
 
-  removeHighlight(element: HTMLElement) {
+  private removeHighlight(element: HTMLElement) {
     element.classList.remove("current-day-styling");
   }
 
-  renderPrevMonthCells() {
+  private renderPrevMonthCells() {
     if (this.state && this.cells) {
       for (let i = 0; i < this.state.monthStartWeekDay; i++) {
         const currentCell = this.cells[i];
@@ -133,7 +125,7 @@ export class SideCalendar {
     }
   }
 
-  renderNextMonthCells() {
+  private renderNextMonthCells() {
     if (this.state && this.cells) {
       for (
         let i = 1;
@@ -163,7 +155,7 @@ export class SideCalendar {
     }
   }
 
-  renderSideCalendarCells() {
+  private renderSideCalendarCells() {
     this.renderCurrentMonthCells();
     this.renderPrevMonthCells();
     this.renderNextMonthCells();
