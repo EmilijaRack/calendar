@@ -13,11 +13,9 @@ export class EventModal {
   constructor(root: HTMLElement) {
     this.root = root;
 
-    const startTime = assertHTMLElement<HTMLInputElement>(".start-time", root);
-    this.startTime = startTime;
+    this.startTime = assertHTMLElement<HTMLInputElement>(".start-time", root);
 
-    const endTime = assertHTMLElement<HTMLInputElement>(".end-time", root);
-    this.endTime = endTime;
+    this.endTime = assertHTMLElement<HTMLInputElement>(".end-time", root);
 
     this.endTime.addEventListener("change", () => {
       if (this.isTimeCorrect()) {
@@ -26,11 +24,10 @@ export class EventModal {
       }
     });
 
-    const eventTitle = assertHTMLElement<HTMLInputElement>(
+    this.eventTitle = assertHTMLElement<HTMLInputElement>(
       ".form-body__add-item",
       root
     );
-    this.eventTitle = eventTitle;
 
     this.eventTitle.addEventListener("change", () => {
       if (this.isTitleCorrect()) {
@@ -120,7 +117,7 @@ export class EventModal {
     return this.eventTitle.value !== "";
   }
 
-  isTimeCorrect() {
+  private isTimeCorrect() {
     return this.endTime.value >= this.startTime.value;
   }
 

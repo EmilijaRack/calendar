@@ -9,9 +9,13 @@ enum NavDirection {
   Next,
 }
 
+function unreachable(param: never) {
+  throw new Error(param);
+}
+
 export class SideCalendar {
   private currentDateDisplay: HTMLElement;
-  private cells: NodeListOf<HTMLElement>;
+  private cells?: NodeListOf<HTMLElement>;
   private state: SideCalendarState;
 
   constructor(root: HTMLElement) {
@@ -25,40 +29,44 @@ export class SideCalendar {
     root
       .querySelector("#side-calendar-left-arrow")
       ?.addEventListener("click", () => {
-        this.initialNavigation(NavDirection.Prev);
+        this.navigate(NavDirection.Prev);
       });
 
     root
       .querySelector("#side-calendar-right-arrow")
       ?.addEventListener("click", () => {
-        this.initialNavigation(NavDirection.Next);
+        this.navigate(NavDirection.Next);
       });
 
     window.addEventListener("load", () => {
-      this.initialNavigation();
+      this.rerender();
     });
   }
 
-  private initialNavigation(direction?: NavDirection) {
+  private navigate(direction: NavDirection) {
     this.updateDisplayDate(direction);
+    this.rerender();
+  }
+
+  private rerender() {
     this.displayCurrentDate();
     this.renderSideCalendarCells();
   }
 
-  private getDirection(direction?: NavDirection) {
+  private getDirection(direction: NavDirection) {
     switch (direction) {
       case NavDirection.Next:
         return 1;
       case NavDirection.Prev:
         return -1;
       default:
-        return undefined;
+        unreachable(direction);
     }
   }
 
-  private updateDisplayDate(direction?: NavDirection) {
+  private updateDisplayDate(direction: NavDirection) {
     const newDirection = this.getDirection(direction);
-    if (this.state && newDirection) {
+    if (newDirection) {
       this.state = new SideCalendarState(
         new Date(
           this.state.displayDate.getFullYear(),
@@ -76,7 +84,7 @@ export class SideCalendar {
   }
 
   private renderCurrentMonthCells() {
-    if (this.state && this.cells) {
+    if (this.cells) {
       for (let i = 1; i <= this.state.displayMonthLength; i++) {
         const currentCell = this.cells[i + this.state.monthStartWeekDay - 1];
         currentCell.innerHTML = i.toString();
@@ -101,7 +109,7 @@ export class SideCalendar {
   }
 
   private renderPrevMonthCells() {
-    if (this.state && this.cells) {
+    if (this.cells) {
       for (let i = 0; i < this.state.monthStartWeekDay; i++) {
         const currentCell = this.cells[i];
         currentCell.innerHTML = (
@@ -126,7 +134,7 @@ export class SideCalendar {
   }
 
   private renderNextMonthCells() {
-    if (this.state && this.cells) {
+    if (this.cells) {
       for (
         let i = 1;
         i <=

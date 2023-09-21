@@ -21,7 +21,6 @@ const rootElement = assertHTMLElement<HTMLElement>(
   "#root",
   document.documentElement
 );
-document.querySelector<HTMLElement>("#root");
 
 const mainCalendar = new MainCalendar(rootElement, eventModal, localStorageApi);
 
