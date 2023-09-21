@@ -6,14 +6,14 @@ const DAYS_IN_A_WEEK = 7;
 
 export class Renderer {
   private calendarCells: NodeListOf<HTMLElement>;
-  private cellArray: HTMLElement[][];
+  private cellArray: (HTMLElement | undefined)[][];
   private onEventClickFn: (id: number, event: Event) => void;
 
   constructor(root: HTMLElement) {
     this.calendarCells = root.querySelectorAll(".main-calendar__body__cells");
     this.cellArray = new Array<HTMLElement[] | undefined>(HOURS_IN_A_DAY)
       .fill(undefined)
-      .map(() => new Array(DAYS_IN_A_WEEK));
+      .map(() => new Array<HTMLElement | undefined>(DAYS_IN_A_WEEK));
     for (let i = 0; i < HOURS_IN_A_DAY; i++) {
       for (let j = 0; j < DAYS_IN_A_WEEK; j++) {
         this.cellArray[i][j] = this.calendarCells[i * DAYS_IN_A_WEEK + j];
@@ -34,7 +34,7 @@ export class Renderer {
           .toTimeString()
           .slice(0, 5)} - ${event.endDate.toTimeString().slice(0, 5)}`;
         this.setEventStyles(start, end, eventDataContainer);
-        this.cellArray[start.getHours()][start.getDay()].appendChild(
+        this.cellArray[start.getHours()][start.getDay()]?.appendChild(
           eventDataContainer
         );
       }
@@ -82,7 +82,7 @@ export class Renderer {
     if (this.cellArray) {
       for (let i = 0; i < HOURS_IN_A_DAY; i++) {
         for (let j = 0; j < DAYS_IN_A_WEEK; j++) {
-          this.cellArray[i][j].replaceChildren();
+          this.cellArray[i][j]?.replaceChildren();
         }
       }
     }
