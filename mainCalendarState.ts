@@ -1,11 +1,6 @@
 import { Event } from "./event";
 
-export interface AppStateType {
-  displayDate: Date;
-  events: Event[];
-}
-
-export class AppState implements AppStateType {
+export class AppState {
   displayDate: Date;
   events: Event[];
 
