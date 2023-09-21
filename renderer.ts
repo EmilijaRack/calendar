@@ -5,14 +5,14 @@ const HOURS_IN_A_DAY = 24;
 const DAYS_IN_A_WEEK = 7;
 
 export class Renderer {
-  private calendarCells?: NodeListOf<HTMLElement> | null;
-  private cellArray?: HTMLElement[][] | null;
+  private calendarCells: NodeListOf<HTMLElement>;
+  private cellArray: HTMLElement[][];
   private onEventClickFn: (id: number, event: Event) => void;
 
   constructor(root: HTMLElement) {
     this.calendarCells = root.querySelectorAll(".main-calendar__body__cells");
-    this.cellArray = new Array(HOURS_IN_A_DAY)
-      .fill(0)
+    this.cellArray = new Array<HTMLElement[] | undefined>(HOURS_IN_A_DAY)
+      .fill(undefined)
       .map(() => new Array(DAYS_IN_A_WEEK));
     for (let i = 0; i < HOURS_IN_A_DAY; i++) {
       for (let j = 0; j < DAYS_IN_A_WEEK; j++) {
@@ -41,7 +41,7 @@ export class Renderer {
     }
   }
 
-  setEventStyles(
+  private setEventStyles(
     startDate: Date,
     endDate: Date,
     eventDataContainer: HTMLElement
@@ -55,7 +55,13 @@ export class Renderer {
     });
   }
 
-  calcEventRanges({ startDate, endDate }: { startDate: Date; endDate: Date }) {
+  private calcEventRanges({
+    startDate,
+    endDate,
+  }: {
+    startDate: Date;
+    endDate: Date;
+  }): Date[][] {
     const result = [];
     let eventStart = startDate.getTime();
     let eventEnd = new Date(eventStart).setHours(23, 59, 59, 999);
