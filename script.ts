@@ -96,12 +96,7 @@ document.addEventListener("click", (event) => {
   }
 });
 
-mainCalendar.onDeletingEvent((id, event) => {
-  mainCalendarState.addDisplayWeekOffset(
-    Math.abs(
-      mainCalendarState.displayDate.getDate() - event.startDate.getDate()
-    )
-  );
+mainCalendar.onDeletingEvent((id) => {
   mainCalendarState.removeEvent(id);
   mainCalendar.renderWeekEvents(
     mainCalendarState.events,
@@ -111,11 +106,6 @@ mainCalendar.onDeletingEvent((id, event) => {
 
 mainCalendar.onCreatingEvent((event) => {
   mainCalendarState.addEvent(event);
-  mainCalendarState.addDisplayWeekOffset(
-    Math.abs(
-      mainCalendarState.displayDate.getDate() - event.startDate.getDate()
-    )
-  );
   headerNavigation.displayCurrentDate(mainCalendarState);
   mainCalendar.renderDisplayWeek(mainCalendarState);
   mainCalendar.renderWeekEvents(mainCalendarState.events, event.startDate);
