@@ -1,17 +1,8 @@
 import { isToday, setDate } from "./dateHelpers.js";
 import { SideCalendarState } from "./sideCalendarState.js";
-import { assertHTMLElement } from "./utils.js";
+import { NavDirection, assertHTMLElement, unreachable } from "./utils.js";
 
 const MAX_NUMBER_OF_CELLS = 42;
-
-enum NavDirection {
-  Prev,
-  Next,
-}
-
-function unreachable(param: never) {
-  throw new Error(param);
-}
 
 export class SideCalendar {
   private currentDateDisplay: HTMLElement;

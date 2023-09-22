@@ -1,14 +1,5 @@
 import { AppState } from "./mainCalendarState";
-import { assertHTMLElement } from "./utils.js";
-
-export enum NavDirection {
-  Prev,
-  Next,
-}
-
-function unreachable(param: never) {
-  throw new Error(param);
-}
+import { NavDirection, assertHTMLElement, unreachable } from "./utils.js";
 
 export class HeaderNavigation {
   private currentDateDisplay: HTMLElement;

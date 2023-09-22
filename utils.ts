@@ -33,3 +33,12 @@ export function isEventArrayType(events: any): events is Event[] {
   }
   return true;
 }
+
+export function unreachable(param: never) {
+  throw new Error(param);
+}
+
+export enum NavDirection {
+  Prev,
+  Next,
+}
