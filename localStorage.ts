@@ -1,5 +1,4 @@
 import { Event } from "./event";
-import { isEventArrayType } from "./utils.js";
 
 export interface CalendarApi {
   createEvent: (event: Event) => Promise<Event>;
@@ -11,69 +10,83 @@ export interface CalendarApi {
 export function createCalendarAPI(config: { delay: number }): CalendarApi {
   const delay = config.delay;
 
-  const getRandomDelay = () => {
-    if (Array.isArray(delay)) {
-      return Math.floor(Math.random() * (delay[1] - delay[0])) + delay[0];
+export class CalendarAPI implements CalendarApi {
+  private delay: number;
+  private storageKey: string;
+
+  constructor(config: { delay: number }) {
+    this.delay = config.delay;
+    this.storageKey = "calendarEvents";
+  }
+
+  private getRandomDelay = () => {
+    if (Array.isArray(this.delay)) {
+      return (
+        Math.floor(Math.random() * (this.delay[1] - this.delay[0])) +
+        this.delay[0]
+      );
     }
-    return delay;
+    return this.delay;
   };
 
-  const storageKey = "calendarEvents";
-
-  const getEvents = () => {
-    const events = JSON.parse(localStorage.getItem(storageKey) || "[]");
-    if (isEventArrayType(events)) {
+  private getEvents = (): Event[] => {
+    const events = JSON.parse(localStorage.getItem(this.storageKey) || "[]");
+    if (isCustomObjectType<Event[]>(events)) {
       return events;
     } else throw new Error("Not an Event type");
   };
 
-  const setEvents = (events: Event[]) =>
-    localStorage.setItem(storageKey, JSON.stringify(events));
+  private setEvents = (events: Event[]) =>
+    localStorage.setItem(this.storageKey, JSON.stringify(events));
 
-  return {
-    createEvent: (event: Event) =>
-      new Promise((resolve) => {
-        setTimeout(() => {
-          const events = getEvents();
-          event.id = new Date().getTime();
-          events.push(event);
-          setEvents(events);
-          resolve(event);
-        }, getRandomDelay());
-      }),
-    updateEvent: (id: number, updatedEvent: Event) =>
-      new Promise((resolve, reject) => {
-        setTimeout(() => {
-          const events = getEvents();
-          const index = events.findIndex((e: Event) => e.id === id);
-          if (index !== -1) {
-            events[index] = { ...events[index], ...updatedEvent };
-            setEvents(events);
-            resolve(events[index]);
-          } else {
-            reject("Event not found");
-          }
-        }, getRandomDelay());
-      }),
-    deleteEvent: (id: number) =>
-      new Promise((resolve, reject) => {
-        setTimeout(() => {
-          const events = getEvents();
-          const index = events.findIndex((e: Event) => e.id === id);
-          if (index !== -1) {
-            events.splice(index, 1);
-            setEvents(events);
-            resolve();
-          } else {
-            reject("Event not found");
-          }
-        }, getRandomDelay());
-      }),
-    listEvents: () =>
-      new Promise<Event[]>((resolve) => {
-        setTimeout(() => {
-          resolve(getEvents());
-        }, getRandomDelay());
-      }),
-  };
+  createEvent(event: Event): Promise<Event> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const events = this.getEvents();
+        event.id = new Date().getTime();
+        events.push(event);
+        this.setEvents(events);
+        resolve(event);
+      }, this.getRandomDelay());
+    });
+  }
+
+  updateEvent(id: number, updatedEvent: Event): Promise<Event> {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        const events = this.getEvents();
+        const index = events.findIndex((e: Event) => e.id === id);
+        if (index !== -1) {
+          events[index] = { ...events[index], ...updatedEvent };
+          this.setEvents(events);
+          resolve(events[index]);
+        } else {
+          reject("Event not found");
+        }
+      }, this.getRandomDelay());
+    });
+  }
+
+  deleteEvent(id: number): Promise<void> {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        const events = this.getEvents();
+        const index = events.findIndex((e: Event) => e.id === id);
+        if (index !== -1) {
+          events.splice(index, 1);
+          this.setEvents(events);
+          resolve();
+        } else {
+          reject("Event not found");
+        }
+      }, this.getRandomDelay());
+    });
+  }
+  listEvents(): Promise<Event[]> {
+    return new Promise<Event[]>((resolve) => {
+      setTimeout(() => {
+        resolve(this.getEvents());
+      }, this.getRandomDelay());
+    });
+  }
 }

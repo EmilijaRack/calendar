@@ -1,5 +1,5 @@
 import { EventModal } from "./eventModal.js";
-import { CalendarApi, createCalendarAPI } from "./localStorage.js";
+import { CalendarApi, CalendarAPI } from "./localStorage.js";
 import { MainCalendar } from "./mainCalendar.js";
 import { AppState } from "./mainCalendarState.js";
 import { HeaderNavigation } from "./headerNavigation.js";
@@ -14,7 +14,7 @@ const modalContainer = assertHTMLElement<HTMLElement>(
 document.querySelector<HTMLElement>("#event-modal");
 
 const eventModal = new EventModal(modalContainer);
-const localStorageApi: CalendarApi = createCalendarAPI({ delay: 0 });
+const localStorageApi: CalendarApi = new CalendarAPI({ delay: 0 });
 const mainCalendarState = new AppState();
 
 const rootElement = assertHTMLElement<HTMLElement>(
