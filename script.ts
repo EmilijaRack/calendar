@@ -11,7 +11,6 @@ const modalContainer = assertHTMLElement<HTMLElement>(
   "#event-modal",
   document.documentElement
 );
-document.querySelector<HTMLElement>("#event-modal");
 
 const eventModal = new EventModal(modalContainer);
 const localStorageApi: CalendarApi = new CalendarAPI({ delay: 0 });
@@ -22,7 +21,7 @@ const rootElement = assertHTMLElement<HTMLElement>(
   document.documentElement
 );
 
-const mainCalendar = new MainCalendar(rootElement, eventModal, localStorageApi);
+const mainCalendar = new MainCalendar(rootElement, eventModal);
 
 window.addEventListener("load", async () => {
   await loadEvents();

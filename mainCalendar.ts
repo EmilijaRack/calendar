@@ -3,7 +3,7 @@ import { Renderer } from "./renderer.js";
 import { Event } from "./event.js";
 import { EventModal } from "./eventModal.js";
 import { AppState } from "./mainCalendarState.js";
-import { CalendarApi } from "./localStorage.js";
+import { CalendarAPI } from "./localStorage.js";
 
 export class MainCalendar {
   private renderer: Renderer;
@@ -13,14 +13,10 @@ export class MainCalendar {
   private onDeletingEventCb: (id: number, event: Event) => void = () => {};
   private onCreatingEventCb: (event: Event) => void = () => {};
 
-  constructor(
-    root: HTMLElement,
-    eventModal: EventModal,
-    localStorageApi: CalendarApi
-  ) {
+  constructor(root: HTMLElement, eventModal: EventModal) {
     this.renderer = new Renderer(root);
     this.days = root.querySelectorAll<HTMLElement>(".week-days__cells--h1");
-    this.localStorageApi = localStorageApi;
+    this.localStorageApi = new CalendarAPI({ delay: 0 });
 
     window.addEventListener("load", () => {
       this.renderDisplayWeek();
