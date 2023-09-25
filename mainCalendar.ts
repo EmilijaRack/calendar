@@ -3,20 +3,24 @@ import { Renderer } from "./renderer.js";
 import { Event } from "./event.js";
 import { EventModal } from "./eventModal.js";
 import { AppState } from "./mainCalendarState.js";
-import { CalendarAPI } from "./localStorage.js";
+import { CalendarAPI } from "./calendarApi.js";
 
 export class MainCalendar {
   private renderer: Renderer;
   private days: NodeListOf<HTMLElement>;
-  private localStorageApi;
+  private calendarApi;
 
   private onDeletingEventCb: (id: number, event: Event) => void = () => {};
   private onCreatingEventCb: (event: Event) => void = () => {};
 
-  constructor(root: HTMLElement, eventModal: EventModal) {
+  constructor(
+    root: HTMLElement,
+    eventModal: EventModal,
+    calendarApi: CalendarAPI
+  ) {
     this.renderer = new Renderer(root);
     this.days = root.querySelectorAll<HTMLElement>(".week-days__cells--h1");
-    this.localStorageApi = new CalendarAPI({ delay: 0 });
+    this.calendarApi = calendarApi;
 
     window.addEventListener("load", () => {
       this.renderDisplayWeek();
@@ -83,7 +87,7 @@ export class MainCalendar {
   }
 
   private deleteEventWhenConfirmed(id: number, event: Event): Promise<void> {
-    return this.localStorageApi
+    return this.calendarApi
       .deleteEvent(id)
       .then(() => {
         this.renderer.clearEventsFromBoard();
@@ -102,7 +106,7 @@ export class MainCalendar {
   }
 
   private createEvent(event: Event): Promise<void> {
-    return this.localStorageApi
+    return this.calendarApi
       .createEvent(event)
       .then(() => {
         this.renderer.clearEventsFromBoard();

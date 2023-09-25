@@ -1,5 +1,5 @@
 import { EventModal } from "./eventModal.js";
-import { CalendarApi, CalendarAPI } from "./localStorage.js";
+import { CalendarAPI } from "./calendarApi.js";
 import { MainCalendar } from "./mainCalendar.js";
 import { AppState } from "./mainCalendarState.js";
 import { HeaderNavigation } from "./headerNavigation.js";
@@ -13,7 +13,7 @@ const modalContainer = assertHTMLElement<HTMLElement>(
 );
 
 const eventModal = new EventModal(modalContainer);
-const localStorageApi: CalendarApi = new CalendarAPI({ delay: 0 });
+const calendarApi = new CalendarAPI({ delay: 0 });
 const mainCalendarState = new AppState();
 
 const rootElement = assertHTMLElement<HTMLElement>(
@@ -21,7 +21,7 @@ const rootElement = assertHTMLElement<HTMLElement>(
   document.documentElement
 );
 
-const mainCalendar = new MainCalendar(rootElement, eventModal);
+const mainCalendar = new MainCalendar(rootElement, eventModal, calendarApi);
 
 window.addEventListener("load", async () => {
   await loadEvents();
@@ -66,7 +66,7 @@ function render() {
 }
 
 function loadEvents(): Promise<void> {
-  return localStorageApi
+  return calendarApi
     .listEvents()
     .then((events: Event[]) => {
       mainCalendarState.updateEvents(

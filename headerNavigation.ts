@@ -1,5 +1,5 @@
 import { AppState } from "./mainCalendarState";
-import { NavDirection } from "./navDirection.js";
+import { NavDirection } from "./commonTypes.js";
 import { assertHTMLElement, unreachable } from "./utils.js";
 
 export class HeaderNavigation {

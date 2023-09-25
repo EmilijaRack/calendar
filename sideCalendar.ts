@@ -1,5 +1,5 @@
 import { isToday, setDate } from "./dateHelpers.js";
-import { NavDirection } from "./navDirection.js";
+import { NavDirection } from "./commonTypes.js";
 import { SideCalendarState } from "./sideCalendarState.js";
 import { assertHTMLElement, unreachable } from "./utils.js";
 
