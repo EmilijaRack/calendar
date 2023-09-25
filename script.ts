@@ -1,35 +1,53 @@
 import { EventModal } from "./eventModal.js";
-import { createCalendarAPI } from "./localStorage.js";
+import { CalendarAPI } from "./calendarApi.js";
 import { MainCalendar } from "./mainCalendar.js";
 import { AppState } from "./mainCalendarState.js";
 import { HeaderNavigation } from "./headerNavigation.js";
 import { SideCalendar } from "./sideCalendar.js";
+import { Event } from "./event.js";
+import { assertHTMLElement } from "./utils.js";
 
-const modalContainer = document.querySelector("#event-modal");
-const eventModal = new EventModal(modalContainer);
-const localStorageApi = createCalendarAPI({ delay: 0 });
-const mainCalendarState = new AppState();
-const mainCalendar = new MainCalendar(
-  document.querySelector("#root"),
-  eventModal,
-  localStorageApi
+const modalContainer = assertHTMLElement<HTMLElement>(
+  "#event-modal",
+  document.documentElement
 );
+
+const eventModal = new EventModal(modalContainer);
+const calendarApi = new CalendarAPI({ delay: 0 });
+const mainCalendarState = new AppState();
+
+const rootElement = assertHTMLElement<HTMLElement>(
+  "#root",
+  document.documentElement
+);
+
+const mainCalendar = new MainCalendar(rootElement, eventModal, calendarApi);
 
 window.addEventListener("load", async () => {
   await loadEvents();
   render();
 });
 
-new SideCalendar(document.querySelector(".left-block"));
+new SideCalendar(
+  assertHTMLElement<HTMLElement>(".left-block", document.documentElement)
+);
 
-document.querySelector(".btn-event").addEventListener("click", (event) => {
+document.querySelector(".btn-event")?.addEventListener("click", (event) => {
   event.stopPropagation();
   eventModal.open();
 });
 
-const headerNavigation = new HeaderNavigation(
-  document.querySelector("#header-navigation-root")
+assertHTMLElement<HTMLElement>(
+  ".close-btn",
+  document.documentElement
+).addEventListener("click", () => eventModal.close());
+
+const headerNavigationRoot = assertHTMLElement<HTMLElement>(
+  "#header-navigation-root",
+  document.documentElement
 );
+
+const headerNavigation = new HeaderNavigation(headerNavigationRoot);
 
 headerNavigation.onNavigationChange((offset) => {
   mainCalendarState.addDisplayWeekOffset(offset);
@@ -47,12 +65,12 @@ function render() {
   );
 }
 
-function loadEvents() {
-  return localStorageApi
+function loadEvents(): Promise<void> {
+  return calendarApi
     .listEvents()
-    .then((events) => {
+    .then((events: Event[]) => {
       mainCalendarState.updateEvents(
-        events.map((event) => ({
+        events.map((event: Event) => ({
           ...event,
           startDate: new Date(event.startDate),
           endDate: new Date(event.endDate),
@@ -69,19 +87,15 @@ function loadEvents() {
 
 document.addEventListener("click", (event) => {
   if (
-    !modalContainer.contains(event.target) &&
+    event.target &&
+    !modalContainer?.contains(event.target as Node) &&
     event.target !== modalContainer
   ) {
     eventModal.close();
   }
 });
 
-mainCalendar.onDeletingEvent((id, event) => {
-  mainCalendarState.addDisplayWeekOffset(
-    Math.abs(
-      mainCalendarState.displayDate.getDate() - event.startDate.getDate()
-    )
-  );
+mainCalendar.onDeletingEvent((id) => {
   mainCalendarState.removeEvent(id);
   mainCalendar.renderWeekEvents(
     mainCalendarState.events,
@@ -91,11 +105,6 @@ mainCalendar.onDeletingEvent((id, event) => {
 
 mainCalendar.onCreatingEvent((event) => {
   mainCalendarState.addEvent(event);
-  mainCalendarState.addDisplayWeekOffset(
-    Math.abs(
-      mainCalendarState.displayDate.getDate() - event.startDate.getDate()
-    )
-  );
   headerNavigation.displayCurrentDate(mainCalendarState);
   mainCalendar.renderDisplayWeek(mainCalendarState);
   mainCalendar.renderWeekEvents(mainCalendarState.events, event.startDate);

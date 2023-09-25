@@ -4,12 +4,14 @@
   "description": "",
   "main": "script.js",
   "scripts": {
-    "start": "live-server --open=week-view-layout/week-view-layout.html"
+    "start": "tsc --watch & live-server --open=week-view-layout/week-view-layout.html",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "live-server": "^1.2.2"
+    "live-server": "^1.2.2",
+    "typescript": "^5.2.2"
   }
 }

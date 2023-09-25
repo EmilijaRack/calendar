@@ -1,5 +1,10 @@
 export class SideCalendarState {
-  constructor(displayDate) {
+  displayDate: Date;
+  displayMonthLength: number;
+  prevMonthLength: number;
+  monthStartWeekDay: number;
+
+  constructor(displayDate: Date) {
     this.displayDate = displayDate ?? new Date();
     this.displayMonthLength = this.getCurMonthLength();
     this.prevMonthLength = this.getPrevMonthLength();

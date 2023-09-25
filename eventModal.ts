@@ -1,24 +1,42 @@
 import { Event } from "./event.js";
+import { assertHTMLElement } from "./utils.js";
 
 export class EventModal {
-  constructor(root) {
+  private root: HTMLElement;
+  private startTime: HTMLInputElement;
+  private endTime: HTMLInputElement;
+  private eventTitle: HTMLInputElement;
+  private onSaveFn: (event: Event) => void = () => {};
+  private dateErrorMsg?: HTMLElement;
+  private titleErrorMsg?: HTMLElement;
+
+  constructor(root: HTMLElement) {
     this.root = root;
-    this.startTime = root.querySelector(".start-time");
-    this.endTime = root.querySelector(".end-time");
-    this.eventTitle = root.querySelector(".form-body__add-item");
-    this.eventTitle.addEventListener("change", () => {
-      if (this.isTitleCorrect()) {
-        this.eventTitle.classList.remove("noTitleError");
-        this.removeTitleError();
-      }
-    });
+
+    this.startTime = assertHTMLElement<HTMLInputElement>(".start-time", root);
+
+    this.endTime = assertHTMLElement<HTMLInputElement>(".end-time", root);
+
     this.endTime.addEventListener("change", () => {
       if (this.isTimeCorrect()) {
         this.endTime.classList.remove("endDateError");
         this.removeDateError();
       }
     });
-    root.querySelector(".save").addEventListener("click", () => {
+
+    this.eventTitle = assertHTMLElement<HTMLInputElement>(
+      ".form-body__add-item",
+      root
+    );
+
+    this.eventTitle.addEventListener("change", () => {
+      if (this.isTitleCorrect()) {
+        this.eventTitle.classList.remove("noTitleError");
+        this.removeTitleError();
+      }
+    });
+
+    root.querySelector(".save")?.addEventListener("click", () => {
       if (!this.isFormCorrect()) {
         this.handleFormErrors();
         return;
@@ -33,12 +51,12 @@ export class EventModal {
     });
   }
 
-  removeDateError() {
+  private removeDateError() {
     this.dateErrorMsg && this.dateErrorMsg.remove();
     this.dateErrorMsg = undefined;
   }
 
-  removeTitleError() {
+  private removeTitleError() {
     this.titleErrorMsg && this.titleErrorMsg.remove();
     this.titleErrorMsg = undefined;
   }
@@ -55,7 +73,7 @@ export class EventModal {
     this.endTime.value = this.dateToString(endTime);
   }
 
-  dateToString(date) {
+  private dateToString(date: Date): string {
     return date.toLocaleString("lt-LT", {
       timeStyle: "short",
       dateStyle: "medium",
@@ -68,7 +86,7 @@ export class EventModal {
     this.removeTitleError();
   }
 
-  handleFormErrors() {
+  private handleFormErrors() {
     if (!this.isTitleCorrect() && !this.titleErrorMsg) {
       this.eventTitle.classList.add("noTitleError");
       this.titleErrorMsg = this.createError("Please, add a Title");
@@ -84,26 +102,26 @@ export class EventModal {
     }
   }
 
-  createError(text) {
+  private createError(text: string) {
     const errorMsg = document.createElement("p");
     errorMsg.classList.add("errorMsg");
     errorMsg.innerText = text;
     return errorMsg;
   }
 
-  isTitleCorrect() {
+  private isTitleCorrect() {
     return this.eventTitle.value !== "";
   }
 
-  isTimeCorrect() {
+  private isTimeCorrect() {
     return this.endTime.value >= this.startTime.value;
   }
 
-  isFormCorrect() {
+  private isFormCorrect() {
     return this.isTitleCorrect() && this.isTimeCorrect();
   }
 
-  onSave(onSaveFn) {
+  onSave(onSaveFn: (event: Event) => void) {
     this.onSaveFn = onSaveFn;
   }
 }

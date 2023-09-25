@@ -1,59 +1,81 @@
 import { isToday, setDate } from "./dateHelpers.js";
+import { NavDirection } from "./commonTypes.js";
 import { SideCalendarState } from "./sideCalendarState.js";
+import { assertHTMLElement, unreachable } from "./utils.js";
 
 const MAX_NUMBER_OF_CELLS = 42;
-const ONE_MONTH_LEFT = -1;
-const ONE_MONTH_RIGHT = 1;
 
 export class SideCalendar {
-  constructor(root) {
-    this.currentDateDisplay = root.querySelector(".current-date");
+  private currentDateDisplay: HTMLElement;
+  private cells: NodeListOf<HTMLElement>;
+  private state: SideCalendarState;
+
+  constructor(root: HTMLElement) {
+    this.currentDateDisplay = assertHTMLElement<HTMLElement>(
+      ".current-date",
+      root
+    );
     this.cells = root.querySelectorAll(".calendar-dates__cell");
-    this.state = new SideCalendarState();
+    this.state = new SideCalendarState(new Date());
 
     root
       .querySelector("#side-calendar-left-arrow")
-      .addEventListener("click", () => {
-        this.initialNavigation(ONE_MONTH_LEFT);
+      ?.addEventListener("click", () => {
+        this.navigate(NavDirection.Prev);
       });
 
     root
       .querySelector("#side-calendar-right-arrow")
-      .addEventListener("click", () => {
-        this.initialNavigation(ONE_MONTH_RIGHT);
+      ?.addEventListener("click", () => {
+        this.navigate(NavDirection.Next);
       });
 
     window.addEventListener("load", () => {
-      this.initialNavigation(0);
+      this.rerender();
     });
   }
 
-  initialNavigation(direction) {
+  private navigate(direction: NavDirection) {
     this.updateDisplayDate(direction);
+    this.rerender();
+  }
+
+  private rerender() {
     this.displayCurrentDate();
     this.renderSideCalendarCells();
   }
 
-  updateDisplayDate(direction) {
+  private getOffset(direction: NavDirection) {
+    switch (direction) {
+      case NavDirection.Next:
+        return 1;
+      case NavDirection.Prev:
+        return -1;
+      default:
+        unreachable(direction);
+    }
+  }
+
+  private updateDisplayDate(direction: NavDirection) {
     this.state = new SideCalendarState(
       new Date(
         this.state.displayDate.getFullYear(),
-        this.state.displayDate.getMonth() + direction
+        this.state.displayDate.getMonth() + this.getOffset(direction)
       )
     );
   }
 
-  displayCurrentDate() {
+  private displayCurrentDate() {
     this.currentDateDisplay.innerHTML = `${this.state.displayDate.toLocaleString(
       "default",
       { month: "long" }
-    )} ${this.state.displayDate.getFullYear()}`;
+    )} ${this.state?.displayDate.getFullYear()}`;
   }
 
-  renderCurrentMonthCells() {
+  private renderCurrentMonthCells() {
     for (let i = 1; i <= this.state.displayMonthLength; i++) {
       const currentCell = this.cells[i + this.state.monthStartWeekDay - 1];
-      currentCell.innerHTML = i;
+      currentCell.innerHTML = i.toString();
 
       currentCell.classList.remove("calendar-dates__cell--gray");
 
@@ -65,20 +87,23 @@ export class SideCalendar {
     }
   }
 
-  addHighlight(element) {
+  private addHighlight(element: HTMLElement) {
     element.classList.add("current-day-styling");
   }
 
-  removeHighlight(element) {
+  private removeHighlight(element: HTMLElement) {
     element.classList.remove("current-day-styling");
   }
 
-  renderPrevMonthCells() {
+  private renderPrevMonthCells() {
     for (let i = 0; i < this.state.monthStartWeekDay; i++) {
       const currentCell = this.cells[i];
-
-      currentCell.innerHTML =
-        this.state.prevMonthLength - this.state.monthStartWeekDay + 1 + i;
+      currentCell.innerHTML = (
+        this.state.prevMonthLength -
+        this.state.monthStartWeekDay +
+        1 +
+        i
+      ).toString();
 
       currentCell.classList.add("calendar-dates__cell--gray");
 
@@ -93,7 +118,7 @@ export class SideCalendar {
     }
   }
 
-  renderNextMonthCells() {
+  private renderNextMonthCells() {
     for (
       let i = 1;
       i <=
@@ -106,7 +131,7 @@ export class SideCalendar {
         this.cells[
           i + this.state.displayMonthLength + this.state.monthStartWeekDay - 1
         ];
-      currentCell.innerHTML = i;
+      currentCell.innerHTML = i.toString();
 
       currentCell.classList.add("calendar-dates__cell--gray");
 
@@ -121,7 +146,7 @@ export class SideCalendar {
     }
   }
 
-  renderSideCalendarCells() {
+  private renderSideCalendarCells() {
     this.renderCurrentMonthCells();
     this.renderPrevMonthCells();
     this.renderNextMonthCells();
