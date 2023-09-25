@@ -7,8 +7,14 @@ export interface CalendarApi {
   listEvents: () => Promise<Event[]>;
 }
 
-export function createCalendarAPI(config: { delay: number }): CalendarApi {
-  const delay = config.delay;
+function isCustomObjectType<T extends object>(obj: T): obj is T {
+  for (const val of Object.values(obj)) {
+    if (val === undefined) {
+      return false;
+    }
+  }
+  return true;
+}
 
 export class CalendarAPI implements CalendarApi {
   private delay: number;
