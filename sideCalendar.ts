@@ -1,5 +1,5 @@
 import { isToday, setDate } from "./dateHelpers.js";
-import { NavDirection } from "./headerNavigation.js";
+import { NavDirection } from "./navDirection.js";
 import { SideCalendarState } from "./sideCalendarState.js";
 import { assertHTMLElement, unreachable } from "./utils.js";
 
@@ -57,15 +57,12 @@ export class SideCalendar {
   }
 
   private updateDisplayDate(direction: NavDirection) {
-    const newDirection = this.getOffset(direction);
-    if (newDirection) {
-      this.state = new SideCalendarState(
-        new Date(
-          this.state.displayDate.getFullYear(),
-          this.state.displayDate.getMonth() + newDirection
-        )
-      );
-    }
+    this.state = new SideCalendarState(
+      new Date(
+        this.state.displayDate.getFullYear(),
+        this.state.displayDate.getMonth() + this.getOffset(direction)
+      )
+    );
   }
 
   private displayCurrentDate() {

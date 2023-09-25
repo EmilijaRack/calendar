@@ -7,6 +7,6 @@ export function assertHTMLElement<T extends Element>(
   throw new Error("Not an HTMLElement");
 }
 
-export function unreachable(param: never) {
+export function unreachable(param: never): never {
   throw new Error(param);
 }

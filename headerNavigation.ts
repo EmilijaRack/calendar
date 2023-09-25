@@ -1,10 +1,6 @@
 import { AppState } from "./mainCalendarState";
+import { NavDirection } from "./navDirection.js";
 import { assertHTMLElement, unreachable } from "./utils.js";
-
-export enum NavDirection {
-  Prev,
-  Next,
-}
 
 export class HeaderNavigation {
   private currentDateDisplay: HTMLElement;
@@ -21,7 +17,7 @@ export class HeaderNavigation {
       root
     ).addEventListener("click", () => {
       const prev = this.getOffset(NavDirection.Prev);
-      if (prev) this.onNavigationChangeCb && this.onNavigationChangeCb(prev);
+      this.onNavigationChangeCb && this.onNavigationChangeCb(prev);
     });
 
     assertHTMLElement<HTMLButtonElement>(
@@ -29,7 +25,7 @@ export class HeaderNavigation {
       root
     ).addEventListener("click", () => {
       const next = this.getOffset(NavDirection.Next);
-      if (next) this.onNavigationChangeCb && this.onNavigationChangeCb(next);
+      this.onNavigationChangeCb && this.onNavigationChangeCb(next);
     });
 
     this.todayButton.addEventListener("click", (event) => {
