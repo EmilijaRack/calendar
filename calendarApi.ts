@@ -13,7 +13,7 @@ function assertObjectFields<T extends object>(
 ) {
   for (const key of requiredFields) {
     if (obj[key] === undefined) {
-      throw new Error("Not an Event!!!");
+      throw new Error("Field does not exist.");
     }
   }
 }
