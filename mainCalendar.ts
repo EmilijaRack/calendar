@@ -26,7 +26,7 @@ export class MainCalendar {
       this.renderDisplayWeek();
     });
 
-    this.renderer.onEventClick((id: number, event: Event) => {
+    this.renderer.onEventClick((id, event) => {
       if (confirm("Delete this event?")) {
         this.deleteEventWhenConfirmed(id, event);
       }

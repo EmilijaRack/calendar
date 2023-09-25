@@ -41,15 +41,13 @@ export class EventModal {
         this.handleFormErrors();
         return;
       }
-      if (this.eventTitle && this.startTime && this.endTime) {
-        this.onSaveFn(
-          new Event(
-            this.eventTitle.value,
-            new Date(this.startTime.value),
-            new Date(this.endTime.value)
-          )
-        );
-      }
+      this.onSaveFn(
+        new Event(
+          this.eventTitle.value,
+          new Date(this.startTime.value),
+          new Date(this.endTime.value)
+        )
+      );
     });
   }
 
@@ -64,17 +62,15 @@ export class EventModal {
   }
 
   open() {
-    this.eventTitle?.classList.remove("noTitleError");
-    this.endTime?.classList.remove("endDateError");
+    this.eventTitle.classList.remove("noTitleError");
+    this.endTime.classList.remove("endDateError");
     this.root.style.display = "flex";
     const currentTime = new Date();
     const endTime = new Date();
     endTime.setMinutes(currentTime.getMinutes() + 30);
-    if (this.eventTitle && this.startTime && this.endTime) {
-      this.eventTitle.value = "";
-      this.startTime.value = this.dateToString(currentTime);
-      this.endTime.value = this.dateToString(endTime);
-    }
+    this.eventTitle.value = "";
+    this.startTime.value = this.dateToString(currentTime);
+    this.endTime.value = this.dateToString(endTime);
   }
 
   private dateToString(date: Date): string {
@@ -92,17 +88,17 @@ export class EventModal {
 
   private handleFormErrors() {
     if (!this.isTitleCorrect() && !this.titleErrorMsg) {
-      this.eventTitle?.classList.add("noTitleError");
+      this.eventTitle.classList.add("noTitleError");
       this.titleErrorMsg = this.createError("Please, add a Title");
-      this.eventTitle?.after(this.titleErrorMsg);
+      this.eventTitle.after(this.titleErrorMsg);
     }
 
     if (!this.isTimeCorrect() && !this.dateErrorMsg) {
-      this.endTime?.classList.add("endDateError");
+      this.endTime.classList.add("endDateError");
       this.dateErrorMsg = this.createError(
         "The end-date should be later than start-date"
       );
-      this.endTime?.after(this.dateErrorMsg);
+      this.endTime.after(this.dateErrorMsg);
     }
   }
 

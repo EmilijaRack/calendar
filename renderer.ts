@@ -23,21 +23,19 @@ export class Renderer {
   }
 
   renderEvent(event: Event) {
-    if (this.cellArray) {
-      for (let [start, end] of this.calcEventRanges(event)) {
-        const eventDataContainer = document.createElement("div");
-        eventDataContainer.addEventListener("click", () =>
-          this.onEventClickFn(event.id, event)
-        );
-        eventDataContainer.setAttribute("class", "event");
-        eventDataContainer.innerText = `${event.title}, ${event.startDate
-          .toTimeString()
-          .slice(0, 5)} - ${event.endDate.toTimeString().slice(0, 5)}`;
-        this.setEventStyles(start, end, eventDataContainer);
-        this.cellArray[start.getHours()][start.getDay()]?.appendChild(
-          eventDataContainer
-        );
-      }
+    for (let [start, end] of this.calcEventRanges(event)) {
+      const eventDataContainer = document.createElement("div");
+      eventDataContainer.addEventListener("click", () =>
+        this.onEventClickFn(event.id, event)
+      );
+      eventDataContainer.setAttribute("class", "event");
+      eventDataContainer.innerText = `${event.title}, ${event.startDate
+        .toTimeString()
+        .slice(0, 5)} - ${event.endDate.toTimeString().slice(0, 5)}`;
+      this.setEventStyles(start, end, eventDataContainer);
+      this.cellArray[start.getHours()][start.getDay()]?.appendChild(
+        eventDataContainer
+      );
     }
   }
 
@@ -61,8 +59,8 @@ export class Renderer {
   }: {
     startDate: Date;
     endDate: Date;
-  }): Date[][] {
-    const result = [];
+  }): [Date, Date][] {
+    const result: [Date, Date][] = [];
     let eventStart = startDate.getTime();
     let eventEnd = new Date(eventStart).setHours(23, 59, 59, 999);
     while (endDate.getTime() > eventEnd) {
@@ -79,11 +77,9 @@ export class Renderer {
   }
 
   clearEventsFromBoard() {
-    if (this.cellArray) {
-      for (let i = 0; i < HOURS_IN_A_DAY; i++) {
-        for (let j = 0; j < DAYS_IN_A_WEEK; j++) {
-          this.cellArray[i][j]?.replaceChildren();
-        }
+    for (let i = 0; i < HOURS_IN_A_DAY; i++) {
+      for (let j = 0; j < DAYS_IN_A_WEEK; j++) {
+        this.cellArray[i][j]?.replaceChildren();
       }
     }
   }
