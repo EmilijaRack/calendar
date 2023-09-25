@@ -1,6 +1,7 @@
 import { isToday, setDate } from "./dateHelpers.js";
+import { NavDirection } from "./headerNavigation.js";
 import { SideCalendarState } from "./sideCalendarState.js";
-import { NavDirection, assertHTMLElement, unreachable } from "./utils.js";
+import { assertHTMLElement, unreachable } from "./utils.js";
 
 const MAX_NUMBER_OF_CELLS = 42;
 
