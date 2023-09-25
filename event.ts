@@ -4,8 +4,8 @@ export class Event {
   startDate: Date;
   endDate: Date;
 
-  constructor(title: string, startDate: Date, endDate: Date) {
-    this.id = Date.now();
+  constructor(title?: string, startDate?: Date, endDate?: Date, id?: number) {
+    this.id = id ?? Date.now();
     this.title = title ?? "";
     this.startDate = startDate ?? new Date();
     this.endDate = endDate ?? new Date();
