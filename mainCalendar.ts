@@ -1,9 +1,9 @@
-import { isToday } from "./dateHelpers.js";
+import { isToday } from "./src/dateHelpers.js";
 import { Renderer } from "./renderer.js";
 import { Event } from "./event.js";
 import { EventModal } from "./eventModal.js";
-import { AppState } from "./mainCalendarState.js";
-import { CalendarAPI } from "./calendarApi.js";
+import { AppState } from "./src/mainCalendarState.js";
+import { CalendarAPI } from "./src/calendarApi.js";
 
 export class MainCalendar {
   private renderer: Renderer;

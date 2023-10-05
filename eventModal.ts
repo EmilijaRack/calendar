@@ -1,5 +1,5 @@
 import { Event } from "./event.js";
-import { assertHTMLElement } from "./utils.js";
+import { assertHTMLElement } from "./src/utils.js";
 
 export class EventModal {
   private root: HTMLElement;

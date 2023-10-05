@@ -1,6 +1,6 @@
-import { AppState } from "./mainCalendarState";
-import { NavDirection } from "./commonTypes.js";
-import { assertHTMLElement, unreachable } from "./utils.js";
+// import AppState from "./src/mainCalendarState";
+import { NavDirection } from "./src/commonTypes.js";
+import { assertHTMLElement, unreachable } from "./src/utils.js";
 
 export class HeaderNavigation {
   private currentDateDisplay: HTMLElement;
@@ -48,7 +48,7 @@ export class HeaderNavigation {
     this.onNavigationChangeCb = onNavigationChangeCb;
   }
 
-  displayCurrentDate(state: AppState) {
+  displayCurrentDate(state: any) {
     this.currentDateDisplay.innerHTML = `${state.displayDate.toLocaleString(
       "default",
       { month: "long" }

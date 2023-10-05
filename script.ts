@@ -1,11 +1,11 @@
 import { EventModal } from "./eventModal.js";
-import { CalendarAPI } from "./calendarApi.js";
+import { CalendarAPI } from "./src/calendarApi.js";
 import { MainCalendar } from "./mainCalendar.js";
-import { AppState } from "./mainCalendarState.js";
+import AppState from "./src/mainCalendarState.js";
 import { HeaderNavigation } from "./headerNavigation.js";
 import { SideCalendar } from "./sideCalendar.js";
 import { Event } from "./event.js";
-import { assertHTMLElement } from "./utils.js";
+import { assertHTMLElement } from "./src/utils.js";
 
 const modalContainer = assertHTMLElement<HTMLElement>(
   "#event-modal",
