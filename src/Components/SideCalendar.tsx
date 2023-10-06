@@ -65,14 +65,11 @@ const SideCalendar = ({
         />
         <section className="calendar-dates">
           <ul className="calendar-dates__cells">
-            {new Array(WEEKDAYS.length).fill({}).map((_, index) => {
-              return (
-                <li className="calendar-dates__cell--gray" key={index}>
-                  {WEEKDAYS[index]}
-                </li>
-              );
-            })}
-
+            {WEEKDAYS.map((day, index) => (
+              <li className="calendar-dates__cell--gray" key={index}>
+                {day}
+              </li>
+            ))}
             {new Array(getMonthStartWeekDay()).fill({}).map((_, index) => {
               const cellData =
                 getPrevMonthLength() - getMonthStartWeekDay() + 1 + index;
