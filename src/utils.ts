@@ -1,10 +1,5 @@
-export function assertHTMLElement<T extends Element>(
-  element: string,
-  root: HTMLElement
-): T {
-  const elem = root.querySelector<T>(element);
-  if (elem) return elem;
-  throw new Error("Not an HTMLElement");
+export function assertHTMLElement<T>(elem: any): asserts elem is T {
+  if (!elem) throw new Error("Not an HTMLElement");
 }
 
 export function unreachable(param: never): never {

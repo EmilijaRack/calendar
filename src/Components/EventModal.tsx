@@ -1,27 +1,53 @@
 import React from "react";
 import { ChangeEvent, useState } from "react";
+import { getTitleError, getTimeError } from "../errorHandler";
+import Event from "./Event";
 
-const EventModal = () => {
-  const dateToString = (date: Date): string => {
-    return date.toLocaleString("lt-LT", {
-      timeStyle: "short",
-      dateStyle: "medium",
-    });
-  };
+const dateToString = (date: Date): string => {
+  return date.toLocaleString("lt-LT", {
+    timeStyle: "short",
+    dateStyle: "medium",
+  });
+};
 
-  const [dateInputValue, setDateInputValue] = useState(
-    dateToString(new Date())
-  );
+const EventModal = ({
+  onCloseBtnClick,
+  onSaveBtnClick,
+  onCreateEvent,
+}: {
+  onCloseBtnClick: () => void;
+  onSaveBtnClick: () => void;
+  onCreateEvent: (event: Event) => void;
+}) => {
+  const [title, setTitle] = useState("");
 
-  const handleChange = (date: ChangeEvent<HTMLInputElement>) => {
-    setDateInputValue(date.target.value);
-  };
+  const [startDateInputValue, setStartDateInputValue] = useState(new Date());
+
+  const [endDateInputValue, setEndDateInputValue] = useState(() => {
+    const endDate = new Date();
+    endDate.setMinutes(new Date().getMinutes() + 30);
+    return dateToString(endDate);
+  });
+
+  const [event, setEvent] = useState<Event>({
+    id: Date.now(),
+    title: "new Title",
+    startDate: new Date(startDateInputValue),
+    endDate: new Date(endDateInputValue),
+  });
 
   return (
     <section className="event-modal" id="event-modal">
-      <form className="event-form" onSubmit={() => false}>
+      <form className="event-form" onSubmit={(e) => e.preventDefault()}>
         <section className="form-header">
-          <button className="material-symbols-outlined close-btn">close</button>
+          <button
+            className="material-symbols-outlined close-btn"
+            onClick={() => {
+              onCloseBtnClick();
+            }}
+          >
+            close
+          </button>
         </section>
         <section className="form-body">
           <span className="form-body__icons"></span>
@@ -30,7 +56,15 @@ const EventModal = () => {
               type="text"
               placeholder="Add title"
               className="form-body__add-item"
+              value={title}
+              onChange={(date: ChangeEvent<HTMLInputElement>) => {
+                setTitle(date.target.value);
+                setEvent({ ...event, title: date.target.value });
+              }}
             />
+            {getTitleError(title) && (
+              <p className="errorMsg">{getTitleError(title)}</p>
+            )}
           </div>
           <span className="form-body__icons"></span>
           <div className="form-body__btn-list">
@@ -54,14 +88,38 @@ const EventModal = () => {
             <input
               type="datetime-local"
               className="simple-btn start-time"
-              onChange={handleChange}
-              value={dateInputValue}
+              onChange={(date: ChangeEvent<HTMLInputElement>) => {
+                setStartDateInputValue(new Date(date.target.value));
+                setEvent({
+                  ...event,
+                  startDate: new Date(date.target.value),
+                });
+              }}
+              value={dateToString(startDateInputValue)}
             />
             <input
               type="datetime-local"
               className={`simple-btn end-time`}
-              onChange={handleChange}
+              value={endDateInputValue}
+              onChange={(date: ChangeEvent<HTMLInputElement>) => {
+                setEndDateInputValue(date.target.value);
+                setEvent({
+                  ...event,
+                  endDate: new Date(date.target.value),
+                });
+              }}
             />
+            {getTimeError({
+              endTime: new Date(endDateInputValue),
+              startTime: new Date(startDateInputValue),
+            }) && (
+              <p className="errorMsg">
+                {getTimeError({
+                  endTime: new Date(endDateInputValue),
+                  startTime: new Date(startDateInputValue),
+                })}
+              </p>
+            )}
           </div>
           <span className="form-body__icons"></span>
           <div className="form-body__day-timezone">
@@ -141,7 +199,23 @@ const EventModal = () => {
         </section>
         <section className="form-footer">
           <button className="more-options">More options</button>
-          <button className="save">Save</button>
+          <button
+            className="save"
+            onClick={() => {
+              if (
+                !getTitleError(title) &&
+                !getTimeError({
+                  endTime: new Date(endDateInputValue),
+                  startTime: new Date(startDateInputValue),
+                })
+              ) {
+                onSaveBtnClick();
+                onCreateEvent(event);
+              }
+            }}
+          >
+            Save
+          </button>
         </section>
       </form>
     </section>

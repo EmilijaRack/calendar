@@ -1,5 +1,5 @@
 import { Event } from "../event.js";
-import { useReducer, Reducer } from "react";
+import { useReducer, Reducer, useCallback } from "react";
 import { NavDirection } from "./commonTypes.js";
 import { unreachable } from "./utils.js";
 
@@ -13,8 +13,8 @@ type ActionType =
   | { type: "updateEvents"; prop: Event[] }
   | { type: "addEvent"; prop: Event }
   | { type: "removeEvent"; prop: number }
-  | { type: "addDirection"; prop: number }
-  | { type: "addSideCalDirection"; prop: number };
+  | { type: "changeWeek"; prop: number }
+  | { type: "changeMonth"; prop: number };
 
 const reducer = (state: initialState, action: ActionType): initialState => {
   switch (action.type) {
@@ -34,7 +34,7 @@ const reducer = (state: initialState, action: ActionType): initialState => {
       };
     }
 
-    case "addSideCalDirection": {
+    case "changeMonth": {
       return {
         ...state,
         displaySideCalDate: new Date(
@@ -44,7 +44,7 @@ const reducer = (state: initialState, action: ActionType): initialState => {
       };
     }
 
-    case "addDirection": {
+    case "changeWeek": {
       return {
         ...state,
         displayDate: new Date(
@@ -74,21 +74,23 @@ const getOffset = (direction: NavDirection) => {
   }
 };
 
-const useAppState = (props: initialState) => {
-  const { displayDate, displaySideCalDate, events } = props;
-
+const useAppState = () => {
   const [state, dispatch] = useReducer<Reducer<initialState, ActionType>>(
     reducer,
     {
-      displayDate: displayDate ?? new Date(),
-      displaySideCalDate: displaySideCalDate ?? new Date(),
-      events: events ?? [],
+      displayDate: new Date(),
+      displaySideCalDate: new Date(),
+      events: [],
     }
   );
 
-  const getDisplayDate = () => {
+  const getDisplayDate = useCallback(() => {
     return state.displayDate;
-  };
+  }, [state.displayDate]);
+
+  const getEvents = useCallback(() => {
+    return state.events;
+  }, [state.events]);
 
   const getSideCalDisplayDate = () => {
     return state.displaySideCalDate;
@@ -106,16 +108,16 @@ const useAppState = (props: initialState) => {
     dispatch({ type: "removeEvent", prop: id });
   };
 
-  function addSideCalDirection(offset: NavDirection) {
+  function changeMonth(offset: NavDirection) {
     dispatch({
-      type: "addSideCalDirection",
-      prop: offset ? offset : offset - 1,
+      type: "changeMonth",
+      prop: offset === NavDirection.Next ? 1 : -1,
     });
   }
 
-  function addDirection(offset: NavDirection) {
+  function changeWeek(offset: NavDirection) {
     dispatch({
-      type: "addDirection",
+      type: "changeWeek",
       prop: getOffset(offset),
     });
   }
@@ -125,9 +127,10 @@ const useAppState = (props: initialState) => {
     updateEvents,
     addEvent,
     removeEvent,
-    addDirection,
-    addSideCalDirection,
+    changeWeek,
+    changeMonth,
     getSideCalDisplayDate,
+    getEvents,
   };
 };
 

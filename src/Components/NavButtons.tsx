@@ -12,18 +12,14 @@ const NavButtons = ({
       <button
         className="btn-arrow material-symbols-outlined"
         id="top-left-navigation"
-        onClick={() => {
-          onPrevClick();
-        }}
+        onClick={onPrevClick}
       >
         chevron_left
       </button>
       <button
         className="btn-arrow material-symbols-outlined"
         id="top-right-navigation"
-        onClick={() => {
-          onNextClick();
-        }}
+        onClick={onNextClick}
       >
         chevron_right
       </button>

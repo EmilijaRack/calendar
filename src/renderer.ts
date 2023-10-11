@@ -1,4 +1,4 @@
-import { Event } from "./event";
+import { Event } from "../event";
 
 const CELL_HEIGHT = 50;
 const HOURS_IN_A_DAY = 24;

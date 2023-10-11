@@ -1,62 +1,92 @@
-import { createRoot } from "react-dom/client";
-import React, { useState } from "react";
-import { assertHTMLElement } from "./utils";
+import React, { useEffect, useState, useRef } from "react";
 import Header from "./Components/Header";
 import SideCalendar from "./Components/SideCalendar";
 import useAppState from "./mainCalendarState";
 import MainCalendar from "./Components/MainCalendar";
 import EventModal from "./Components/EventModal";
 import { NavDirection } from "./commonTypes";
+import { CalendarAPI } from "./calendarApi";
+import Event from "./Components/Event";
 
-const App = () => {
+const calendarApi = new CalendarAPI({ delay: 0 });
+
+export const App = () => {
   const [isOpen, setOpen] = useState(false);
-  const appFunctions = useAppState({
-    displayDate: new Date(),
-    displaySideCalDate: new Date(),
-    events: [],
-  });
+  const appFunctions = useAppState();
+
+  const createEvent = (event: Event): Promise<void> => {
+    return calendarApi
+      .createEvent(event)
+      .then(() => appFunctions.addEvent(event))
+      .catch(() => {
+        if (confirm("Failed to save. Try again?")) {
+          return createEvent(event);
+        }
+      });
+  };
 
   const openModal = () => {
     setOpen(true);
   };
 
+  const loadEvents = (): Promise<void> => {
+    return calendarApi
+      .listEvents()
+      .then((loadedEvents: Event[]) => {
+        appFunctions.updateEvents(loadedEvents);
+      })
+      .catch((e) => {
+        console.log(e);
+        if (confirm("Failed to load. Try again?")) {
+          return loadEvents();
+        }
+      });
+  };
+
+  useEffect(() => {
+    console.log("loading");
+    loadEvents();
+  }, []);
+
   return (
     <>
       <Header
         onPrevClick={() => {
-          appFunctions.addDirection(NavDirection.Prev);
+          appFunctions.changeWeek(NavDirection.Prev);
         }}
         onNextClick={() => {
-          appFunctions.addDirection(NavDirection.Next);
+          appFunctions.changeWeek(NavDirection.Next);
         }}
-        displayDate={`${appFunctions
-          .getDisplayDate()
-          .toLocaleString("default", { month: "long" })} ${appFunctions
-          .getDisplayDate()
-          .getFullYear()}`}
+        displayDate={appFunctions.getDisplayDate()}
       />
       <main className="main-block">
         <SideCalendar
           displayDate={appFunctions.getSideCalDisplayDate()}
-          onCreateButtonClick={() => openModal()}
+          onCreateButtonClick={openModal}
           onPrevClick={() => {
-            appFunctions.addSideCalDirection(NavDirection.Prev);
+            appFunctions.changeMonth(NavDirection.Prev);
           }}
           onNextClick={() => {
-            appFunctions.addSideCalDirection(NavDirection.Next);
+            appFunctions.changeMonth(NavDirection.Next);
           }}
         />
-        {isOpen ? <EventModal /> : null}
+        {isOpen ? (
+          <EventModal
+            onCloseBtnClick={() => setOpen(false)}
+            onSaveBtnClick={() => {
+              setOpen(false);
+            }}
+            onCreateEvent={(event: Event) => {
+              createEvent(event);
+            }}
+          />
+        ) : null}
 
-        <MainCalendar getDisplayDate={appFunctions.getDisplayDate} />
+        <MainCalendar
+          getDisplayDate={appFunctions.getDisplayDate}
+          getEvents={appFunctions.getEvents}
+        />
       </main>
     </>
   );
 };
-
-const container = assertHTMLElement<HTMLElement>(
-  "#root",
-  document.documentElement
-);
-const root = createRoot(container);
-root.render(<App />);

@@ -1,3 +1,4 @@
+import React from "react";
 import { useState } from "react";
 
 interface Event {
@@ -10,7 +11,7 @@ interface Event {
 const Event = (props: Event) => {
   const { id, title, startDate, endDate } = props;
 
-  const [_, setEventProps] = useState({
+  const [eventProps, setEventProps] = useState({
     id: id ?? Date.now(),
     title: title ?? "",
     startDate: startDate ?? new Date(),
@@ -23,6 +24,15 @@ const Event = (props: Event) => {
     startDate: startDate ?? new Date(),
     endDate: endDate,
   });
+
+  return (
+    <div className="Event">
+      <p>
+        {eventProps.title}, {eventProps.startDate.toTimeString().slice(0, 5)} -
+        {eventProps.endDate.toTimeString().slice(0, 5)}
+      </p>
+    </div>
+  );
 };
 
 export default Event;

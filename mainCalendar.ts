@@ -1,5 +1,5 @@
 import { isToday } from "./src/dateHelpers.js";
-import { Renderer } from "./renderer.js";
+import { Renderer } from "./src/renderer.js";
 import { Event } from "./event.js";
 import { EventModal } from "./eventModal.js";
 import { AppState } from "./src/mainCalendarState.js";

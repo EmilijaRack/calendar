@@ -8,9 +8,9 @@ export interface CalendarApi {
 }
 
 function assertObjectFields<T extends object>(
-  obj: T,
+  obj: any,
   requiredFields: (keyof T)[]
-) {
+): asserts obj is T {
   for (const key of requiredFields) {
     if (obj[key] === undefined) {
       throw new Error("Field does not exist.");
@@ -50,8 +50,8 @@ export class CalendarAPI implements CalendarApi {
       ]);
       return new Event(
         parsedEvent.title,
-        parsedEvent.startDate,
-        parsedEvent.endDate,
+        new Date(parsedEvent.startDate),
+        new Date(parsedEvent.endDate),
         parsedEvent.id
       );
     });
