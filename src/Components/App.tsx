@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import Event from "./Components/Event";
-import EventModal from "./Components/EventModal";
-import Header from "./Components/Header";
-import MainCalendar from "./Components/MainCalendar";
-import SideCalendar from "./Components/SideCalendar";
-import { CalendarAPI } from "./calendarApi";
-import { NavDirection } from "./commonTypes";
-import useAppState from "./mainCalendarState";
+import Event from "./Event";
+import EventModal from "./EventModal";
+import Header from "./Header";
+import MainCalendar from "./MainCalendar";
+import SideCalendar from "./SideCalendar";
+import { CalendarAPI } from "../calendarApi";
+import { NavDirection } from "../commonTypes";
+import useAppState from "../mainCalendarState";
 
 const calendarApi = new CalendarAPI({ delay: 0 });
 
