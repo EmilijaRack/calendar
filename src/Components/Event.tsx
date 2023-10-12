@@ -1,5 +1,7 @@
 import React from "react";
-import { useState } from "react";
+import { SplitEvent } from "./MainCalendar";
+
+const CELL_HEIGHT = 50;
 
 interface Event {
   id: number;
@@ -8,28 +10,29 @@ interface Event {
   endDate: Date;
 }
 
-const Event = (props: Event) => {
-  const { id, title, startDate, endDate } = props;
-
-  const [eventProps, setEventProps] = useState({
-    id: id ?? Date.now(),
-    title: title ?? "",
-    startDate: startDate ?? new Date(),
-    endDate: endDate ?? new Date(),
-  });
-
-  setEventProps({
-    id: id ?? Date.now(),
-    title: title ?? "",
-    startDate: startDate ?? new Date(),
-    endDate: endDate,
-  });
-
+const Event = ({
+  event,
+  onDeletingEvent,
+}: {
+  event: SplitEvent;
+  onDeletingEvent: (event: Event) => void;
+}) => {
   return (
-    <div className="Event">
-      <p>
-        {eventProps.title}, {eventProps.startDate.toTimeString().slice(0, 5)} -
-        {eventProps.endDate.toTimeString().slice(0, 5)}
+    <div
+      className="event"
+      style={{
+        top: (CELL_HEIGHT * event.displayStartTime.getMinutes()) / 60 + "px",
+        height:
+          ((event.displayEndTime.getTime() - event.displayStartTime.getTime()) /
+            (1000 * 60 * 60)) *
+            CELL_HEIGHT +
+          "px",
+      }}
+      onClick={() => onDeletingEvent(event)}
+    >
+      <p className="event--title">
+        {event.title}, {event.startDate.toTimeString().slice(0, 5)} -
+        {event.endDate.toTimeString().slice(0, 5)}
       </p>
     </div>
   );

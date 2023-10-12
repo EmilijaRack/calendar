@@ -92,7 +92,7 @@ const SideCalendar = ({
               return (
                 <li
                   className={`calendar-dates__cell ${
-                    isToday(setDate(displayDate, index))
+                    isToday(setDate(displayDate, index + 1))
                       ? "current-day-styling"
                       : ""
                   }`}

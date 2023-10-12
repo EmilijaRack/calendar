@@ -1,12 +1,12 @@
-import React, { useEffect, useState, useRef } from "react";
-import Header from "./Components/Header";
-import SideCalendar from "./Components/SideCalendar";
-import useAppState from "./mainCalendarState";
-import MainCalendar from "./Components/MainCalendar";
-import EventModal from "./Components/EventModal";
-import { NavDirection } from "./commonTypes";
-import { CalendarAPI } from "./calendarApi";
+import React, { useEffect, useState } from "react";
 import Event from "./Components/Event";
+import EventModal from "./Components/EventModal";
+import Header from "./Components/Header";
+import MainCalendar from "./Components/MainCalendar";
+import SideCalendar from "./Components/SideCalendar";
+import { CalendarAPI } from "./calendarApi";
+import { NavDirection } from "./commonTypes";
+import useAppState from "./mainCalendarState";
 
 const calendarApi = new CalendarAPI({ delay: 0 });
 
@@ -23,6 +23,26 @@ export const App = () => {
           return createEvent(event);
         }
       });
+  };
+
+  const deleteEventWhenConfirmed = (event: Event): Promise<void> => {
+    return calendarApi
+      .deleteEvent(event.id)
+      .then(() => {
+        appFunctions.removeEvent(event.id);
+      })
+      .catch((e: Error) => {
+        if (confirm("Failed to remove an event. Try again?")) {
+          console.log(e);
+          return deleteEventWhenConfirmed(event);
+        }
+      });
+  };
+
+  const confirmToDelete = (event: Event) => {
+    if (confirm("Do you really want to delete this event?")) {
+      deleteEventWhenConfirmed(event);
+    }
   };
 
   const openModal = () => {
@@ -85,6 +105,7 @@ export const App = () => {
         <MainCalendar
           getDisplayDate={appFunctions.getDisplayDate}
           getEvents={appFunctions.getEvents}
+          onDeletingEvent={confirmToDelete}
         />
       </main>
     </>

@@ -252,6 +252,13 @@ body {
   border: 2px solid var(--secondary-variant);
   position: absolute;
   z-index: 1;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.event--title {
+  color: white;
+  background-color: transparent;
 }
 
 .current-day-styling {

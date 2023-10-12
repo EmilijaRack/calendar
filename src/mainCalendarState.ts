@@ -2,11 +2,12 @@ import { Event } from "../event.js";
 import { useReducer, Reducer, useCallback } from "react";
 import { NavDirection } from "./commonTypes.js";
 import { unreachable } from "./utils.js";
+import { SplitEvent } from "./Components/MainCalendar.js";
 
 interface initialState {
   displayDate: Date;
   displaySideCalDate: Date;
-  events: Event[];
+  events: SplitEvent[] | Event[];
 }
 
 type ActionType =
@@ -88,7 +89,7 @@ const useAppState = () => {
     return state.displayDate;
   }, [state.displayDate]);
 
-  const getEvents = useCallback(() => {
+  const getEvents = useCallback((): SplitEvent[] | Event[] => {
     return state.events;
   }, [state.events]);
 

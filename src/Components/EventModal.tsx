@@ -38,9 +38,25 @@ const EventModal = ({
 
   return (
     <section className="event-modal" id="event-modal">
-      <form className="event-form" onSubmit={(e) => e.preventDefault()}>
+      <form
+        className="event-form"
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (
+            !getTitleError(title) &&
+            !getTimeError({
+              endTime: new Date(endDateInputValue),
+              startTime: new Date(startDateInputValue),
+            })
+          ) {
+            onSaveBtnClick();
+            onCreateEvent(event);
+          }
+        }}
+      >
         <section className="form-header">
           <button
+            type="button"
             className="material-symbols-outlined close-btn"
             onClick={() => {
               onCloseBtnClick();
@@ -68,18 +84,26 @@ const EventModal = ({
           </div>
           <span className="form-body__icons"></span>
           <div className="form-body__btn-list">
-            <button className="event-btn">Event</button>
-            <button className="simple-btn">
+            <button type="button" className="event-btn">
+              Event
+            </button>
+            <button type="button" className="simple-btn">
               Focus time
               <span className="list-btn__new-item">NEW</span>
             </button>
-            <button className="simple-btn">Out of office</button>
-            <button className="simple-btn">
+            <button type="button" className="simple-btn">
+              Out of office
+            </button>
+            <button type="button" className="simple-btn">
               Working location
               <span className="list-btn__new-item">NEW</span>
             </button>
-            <button className="simple-btn">Task</button>
-            <button className="simple-btn">Appointment schedule</button>
+            <button type="button" className="simple-btn">
+              Task
+            </button>
+            <button type="button" className="simple-btn">
+              Appointment schedule
+            </button>
           </div>
           <span className="form-body__icons material-symbols-outlined">
             access_time
@@ -149,7 +173,9 @@ const EventModal = ({
           </select>
           <span className="form-body__icons"></span>
           <div>
-            <button className="simple-btn">Find a time</button>
+            <button type="button" className="simple-btn">
+              Find a time
+            </button>
           </div>
           <span className="material-symbols-outlined"> group </span>
           <input
@@ -167,7 +193,9 @@ const EventModal = ({
           </div>
           <span className="material-symbols-outlined"> videocam </span>
           <div>
-            <button className="simple-btn">Add rooms</button>
+            <button type="button" className="simple-btn">
+              Add rooms
+            </button>
           </div>
           <span className="material-symbols-outlined"> location_on </span>
           <input
@@ -179,14 +207,14 @@ const EventModal = ({
             notes
           </span>
           <div>
-            <button className="simple-btn">
+            <button type="button" className="simple-btn">
               Add <em className="add-desc--underline">description</em> or
               <em className="add-desc--underline">attachments</em>
             </button>
           </div>
           <span className="material-symbols-outlined"> event </span>
           <div>
-            <button className="user-btn">
+            <button type="button" className="user-btn">
               <ul className="user-btn__username">
                 <li>Emilija Rackauskaite</li>
                 <li className="user-btn__username__circle"></li>
@@ -198,24 +226,10 @@ const EventModal = ({
           </div>
         </section>
         <section className="form-footer">
-          <button className="more-options">More options</button>
-          <button
-            className="save"
-            onClick={() => {
-              if (
-                !getTitleError(title) &&
-                !getTimeError({
-                  endTime: new Date(endDateInputValue),
-                  startTime: new Date(startDateInputValue),
-                })
-              ) {
-                onSaveBtnClick();
-                onCreateEvent(event);
-              }
-            }}
-          >
-            Save
+          <button type="button" className="more-options">
+            More options
           </button>
+          <button className="save">Save</button>
         </section>
       </form>
     </section>
