@@ -1,41 +1,42 @@
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    border: none;
-    font-family: "Google Sans",Roboto,Arial,sans-serif;
-    color: var(--on-surface);
-    background-color: var(--surface);
-    font-size: 14px;
-    
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: none;
+  font-family: "Google Sans", Roboto, Arial, sans-serif;
+  color: var(--on-surface);
+  background-color: var(--surface);
+  font-size: 14px;
 }
 
-button, select {
-    cursor: pointer;
+button,
+select {
+  cursor: pointer;
 }
 
 button:hover {
-    background-color: var(--chip-hover);
+  background-color: var(--chip-hover);
 }
 
 p {
-    background-color: inherit;
+  background-color: inherit;
 }
 
 svg {
-    fill:  var(--on-surface);
+  fill: var(--on-surface);
 }
 
-ul, ol {   
-    list-style: none;
+ul,
+ol {
+  list-style: none;
 }
 
-select:focus, input:focus {
-    outline: none;
+select:focus,
+input:focus {
+  outline: none;
 }
 
 em {
-    font-style: normal;
-    background-color: inherit;
+  font-style: normal;
+  background-color: inherit;
 }
-
