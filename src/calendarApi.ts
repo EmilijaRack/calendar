@@ -1,4 +1,4 @@
-import { Event } from "../event.js";
+import { Event } from "./event.js";
 
 export interface CalendarApi {
   createEvent: (event: Event) => Promise<Event>;

@@ -1,4 +1,4 @@
-import { Event } from "../event.js";
+import { Event } from "./event.js";
 import { useReducer, Reducer, useCallback } from "react";
 import { NavDirection } from "./commonTypes.js";
 import { unreachable } from "./utils.js";
