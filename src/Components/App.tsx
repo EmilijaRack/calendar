@@ -25,28 +25,23 @@ export const App = () => {
       });
   };
 
-  const deleteEventWhenConfirmed = (event: Event): Promise<void> => {
+  const deleteEvent = (event: Event): Promise<void> => {
     return calendarApi
       .deleteEvent(event.id)
       .then(() => {
         appFunctions.removeEvent(event.id);
       })
-      .catch((e: Error) => {
+      .catch(() => {
         if (confirm("Failed to remove an event. Try again?")) {
-          console.log(e);
-          return deleteEventWhenConfirmed(event);
+          return deleteEvent(event);
         }
       });
   };
 
   const confirmToDelete = (event: Event) => {
     if (confirm("Do you really want to delete this event?")) {
-      deleteEventWhenConfirmed(event);
+      deleteEvent(event);
     }
-  };
-
-  const openModal = () => {
-    setOpen(true);
   };
 
   const loadEvents = (): Promise<void> => {
@@ -64,7 +59,6 @@ export const App = () => {
   };
 
   useEffect(() => {
-    console.log("loading");
     loadEvents();
   }, []);
 
@@ -82,7 +76,7 @@ export const App = () => {
       <main className="main-block">
         <SideCalendar
           displayDate={appFunctions.getSideCalDisplayDate()}
-          onCreateButtonClick={openModal}
+          onCreateButtonClick={() => setOpen(true)}
           onPrevClick={() => {
             appFunctions.changeMonth(NavDirection.Prev);
           }}
@@ -93,18 +87,16 @@ export const App = () => {
         {isOpen ? (
           <EventModal
             onCloseBtnClick={() => setOpen(false)}
-            onSaveBtnClick={() => {
+            onSaveBtnClick={(event) => {
               setOpen(false);
-            }}
-            onCreateEvent={(event: Event) => {
               createEvent(event);
             }}
           />
         ) : null}
 
         <MainCalendar
-          getDisplayDate={appFunctions.getDisplayDate}
-          getEvents={appFunctions.getEvents}
+          displayDate={appFunctions.getDisplayDate()}
+          events={appFunctions.getEvents()}
           onDeletingEvent={confirmToDelete}
         />
       </main>

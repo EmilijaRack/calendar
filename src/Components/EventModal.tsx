@@ -13,12 +13,11 @@ const dateToString = (date: Date): string => {
 const EventModal = ({
   onCloseBtnClick,
   onSaveBtnClick,
-  onCreateEvent,
 }: {
   onCloseBtnClick: () => void;
-  onSaveBtnClick: () => void;
-  onCreateEvent: (event: Event) => void;
+  onSaveBtnClick: (event: Event) => void;
 }) => {
+  // TODO: do not duplicate state
   const [title, setTitle] = useState("");
 
   const [startDateInputValue, setStartDateInputValue] = useState(new Date());
@@ -36,6 +35,7 @@ const EventModal = ({
     endDate: new Date(endDateInputValue),
   });
 
+  // TODO: Breakup into multiple components
   return (
     <section className="event-modal" id="event-modal">
       <form
@@ -49,8 +49,7 @@ const EventModal = ({
               startTime: new Date(startDateInputValue),
             })
           ) {
-            onSaveBtnClick();
-            onCreateEvent(event);
+            onSaveBtnClick(event);
           }
         }}
       >

@@ -1,17 +1,34 @@
 import React, { Fragment, useMemo } from "react";
 import { isToday } from "../dateHelpers";
-import useAppState from "../mainCalendarState";
 import { calculateDayDifference } from "../utils";
 import Event from "./Event";
 
 const DAYS_IN_A_WEEK = 7;
 const HOURS_IN_A_DAY = 24;
 
-type MainCalendarProps = Pick<
-  ReturnType<typeof useAppState>,
-  "getDisplayDate" | "getEvents"
-> & {
-  onDeletingEvent: (event: Event) => void;
+const splitEvent = (event: Event): SplitEvent[] => {
+  const DAY_START = new Date(event.startDate).setHours(0, 0, 0, 0);
+  const DAY_END = new Date(event.startDate).setHours(23, 59, 59, 999);
+
+  const daySpan = calculateDayDifference(event.startDate, event.endDate) + 1;
+
+  return Array.from({ length: daySpan }).map((_, i) => {
+    const currentDayStart = new Date(
+      new Date(DAY_START).setDate(new Date(DAY_START).getDate() + i)
+    );
+    const currentDayEnd = new Date(
+      new Date(DAY_END).setDate(new Date(DAY_END).getDate() + i)
+    );
+
+    const isFirstDay = i === 0;
+    const isLastDay = i === daySpan - 1;
+
+    return {
+      ...event,
+      displayStartTime: isFirstDay ? event.startDate : currentDayStart,
+      displayEndTime: isLastDay ? event.endDate : currentDayEnd,
+    };
+  });
 };
 
 export type SplitEvent = Event & {
@@ -20,48 +37,27 @@ export type SplitEvent = Event & {
 };
 
 const MainCalendar = ({
-  getDisplayDate,
-  getEvents,
+  displayDate,
+  events,
   onDeletingEvent,
-}: MainCalendarProps) => {
+}: {
+  displayDate: Date;
+  events: Event[];
+  onDeletingEvent: (event: Event) => void;
+}) => {
   const hoursInADay = useMemo(() => new Array(HOURS_IN_A_DAY).fill({}), []);
 
   const daysInAWeek = useMemo(() => new Array(DAYS_IN_A_WEEK).fill({}), []);
 
-  const weekStartDate = new Date(getDisplayDate().getTime());
-  weekStartDate.setDate(getDisplayDate().getDate() - getDisplayDate().getDay());
+  const weekStartDate = new Date(displayDate.getTime());
+  weekStartDate.setDate(displayDate.getDate() - displayDate.getDay());
 
-  const weekEndDate = new Date(getDisplayDate().getTime());
-  weekEndDate.setDate(weekEndDate.getDate() + 6 - getDisplayDate().getDay());
-
-  const splitEvent = (event: Event): SplitEvent[] => {
-    const DAY_START = new Date(event.startDate).setHours(0, 0, 0, 0);
-    const DAY_END = new Date(event.startDate).setHours(23, 59, 59, 999);
-
-    const daySpan = calculateDayDifference(event.startDate, event.endDate) + 1;
-
-    return Array.from({ length: daySpan }).map((_, i) => {
-      const currentDayStart = new Date(
-        new Date(DAY_START).setDate(new Date(DAY_START).getDate() + i)
-      );
-      const currentDayEnd = new Date(
-        new Date(DAY_END).setDate(new Date(DAY_END).getDate() + i)
-      );
-
-      const isFirstDay = i === 0;
-      const isLastDay = i === daySpan - 1;
-
-      return {
-        ...event,
-        displayStartTime: isFirstDay ? event.startDate : currentDayStart,
-        displayEndTime: isLastDay ? event.endDate : currentDayEnd,
-      };
-    });
-  };
+  const weekEndDate = new Date(displayDate.getTime());
+  weekEndDate.setDate(weekEndDate.getDate() + 6 - displayDate.getDay());
 
   const weekEvents = useMemo(
     () =>
-      getEvents()
+      events
         .filter((event) => {
           return (
             event.startDate <= weekEndDate && event.endDate >= weekStartDate
@@ -76,7 +72,7 @@ const MainCalendar = ({
             event.displayEndTime >= weekStartDate
           );
         }),
-    [getEvents, getDisplayDate]
+    [events, displayDate]
   );
 
   return (
@@ -89,9 +85,9 @@ const MainCalendar = ({
             <li className="week-days__cells" key={index}>
               <p className="week-days__cells--p">
                 {new Date(
-                  getDisplayDate().getFullYear(),
-                  getDisplayDate().getMonth(),
-                  getDisplayDate().getDate() - getDisplayDate().getDay() + index
+                  displayDate.getFullYear(),
+                  displayDate.getMonth(),
+                  displayDate.getDate() - displayDate.getDay() + index
                 )
                   .toLocaleString("default", {
                     weekday: "short",
@@ -102,11 +98,9 @@ const MainCalendar = ({
                 className={`week-days__cells--h1 ${
                   isToday(
                     new Date(
-                      getDisplayDate().getFullYear(),
-                      getDisplayDate().getMonth(),
-                      getDisplayDate().getDate() -
-                        getDisplayDate().getDay() +
-                        index
+                      displayDate.getFullYear(),
+                      displayDate.getMonth(),
+                      displayDate.getDate() - displayDate.getDay() + index
                     )
                   )
                     ? "current-day-styling"
@@ -114,9 +108,9 @@ const MainCalendar = ({
                 } `}
               >
                 {new Date(
-                  getDisplayDate().getFullYear(),
-                  getDisplayDate().getMonth(),
-                  getDisplayDate().getDate() - getDisplayDate().getDay() + index
+                  displayDate.getFullYear(),
+                  displayDate.getMonth(),
+                  displayDate.getDate() - displayDate.getDay() + index
                 ).getDate()}
               </button>
             </li>
@@ -140,11 +134,11 @@ const MainCalendar = ({
                           weekEvent.displayStartTime.getHours() === i &&
                           weekEvent.displayStartTime.getDay() === j
                       )
-                      .map((suitableEvent, k) => (
+                      .map((suitableEvent) => (
                         <Event
-                          event={{ ...suitableEvent }}
+                          event={suitableEvent}
                           onDeletingEvent={onDeletingEvent}
-                          key={k}
+                          key={suitableEvent.id}
                         />
                       ))}
                   </li>
