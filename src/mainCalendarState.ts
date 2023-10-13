@@ -62,7 +62,20 @@ const reducer = (state: initialState, action: ActionType): initialState => {
   }
 };
 
-const getOffset = (direction: NavDirection) => {
+const getMonthOffset = (direction: NavDirection) => {
+  switch (direction) {
+    case NavDirection.Next:
+      return 1;
+
+    case NavDirection.Prev:
+      return -1;
+
+    default:
+      unreachable(direction);
+  }
+};
+
+const getWeekOffset = (direction: NavDirection) => {
   switch (direction) {
     case NavDirection.Next:
       return 7;
@@ -112,14 +125,14 @@ const useAppState = () => {
   function changeMonth(offset: NavDirection) {
     dispatch({
       type: "changeMonth",
-      prop: offset === NavDirection.Next ? 1 : -1,
+      prop: getMonthOffset(offset),
     });
   }
 
   function changeWeek(offset: NavDirection) {
     dispatch({
       type: "changeWeek",
-      prop: getOffset(offset),
+      prop: getWeekOffset(offset),
     });
   }
 
