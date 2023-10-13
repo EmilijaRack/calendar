@@ -39,11 +39,11 @@ export type SplitEvent = Event & {
 const MainCalendar = ({
   displayDate,
   events,
-  onDeletingEvent,
+  onDeleteEvent,
 }: {
   displayDate: Date;
   events: Event[];
-  onDeletingEvent: (event: Event) => void;
+  onDeleteEvent: (event: Event) => void;
 }) => {
   const hoursInADay = useMemo(() => new Array(HOURS_IN_A_DAY).fill({}), []);
 
@@ -137,7 +137,7 @@ const MainCalendar = ({
                       .map((suitableEvent) => (
                         <Event
                           event={suitableEvent}
-                          onDeletingEvent={onDeletingEvent}
+                          onDeletingEvent={onDeleteEvent}
                           key={suitableEvent.id}
                         />
                       ))}

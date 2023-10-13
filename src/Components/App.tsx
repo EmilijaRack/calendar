@@ -97,7 +97,7 @@ export const App = () => {
         <MainCalendar
           displayDate={appFunctions.getDisplayDate()}
           events={appFunctions.getEvents()}
-          onDeletingEvent={confirmToDelete}
+          onDeleteEvent={confirmToDelete}
         />
       </main>
     </>
