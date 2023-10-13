@@ -44,13 +44,7 @@ const SideCalendar = ({
   return (
     <section className="left-block">
       <section className="left-block__header">
-        <button
-          className="btn-event"
-          onClick={(event) => {
-            event.stopPropagation();
-            onCreateButtonClick();
-          }}
-        >
+        <button className="btn-event" onClick={onCreateButtonClick}>
           Create Event
         </button>
       </section>
