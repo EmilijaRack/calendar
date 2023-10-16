@@ -1,12 +1,16 @@
 import React, { Fragment } from "react";
 import Event from "./Event";
 import MainCalendarHeader from "./MainCalendarHeader";
-import { SplitEvent } from "../utils";
 
 const DAYS_IN_A_WEEK = 7;
 const HOURS_IN_A_DAY = 24;
 const MAIN_CALENDAR_COLUMNS = Array.from({ length: HOURS_IN_A_DAY });
 const MAIN_CALENDAR_ROWS = Array.from({ length: DAYS_IN_A_WEEK });
+
+export type SplitEvent = Event & {
+  displayStartTime: Date;
+  displayEndTime: Date;
+};
 
 const MainCalendar = ({
   displayDate,

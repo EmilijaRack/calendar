@@ -1,9 +1,8 @@
-import { Event } from "./event.js";
-import { useReducer, Reducer, useCallback, useMemo } from "react";
+import { Reducer, useCallback, useMemo, useReducer } from "react";
+import { SplitEvent } from "./Components/MainCalendar.js";
 import { NavDirection } from "./commonTypes.js";
-import { unreachable } from "./utils.js";
-import { splitEvent, SplitEvent } from "./utils.js";
-
+import { Event } from "./event.js";
+import { calculateDayDifference, unreachable } from "./utils.js";
 interface initialState {
   displayDate: Date;
   displaySideCalDate: Date;
@@ -162,6 +161,31 @@ const useAppState = () => {
     });
   }
 
+  function splitEvent(event: Event): SplitEvent[] {
+    const DAY_START = new Date(event.startDate).setHours(0, 0, 0, 0);
+    const DAY_END = new Date(event.startDate).setHours(23, 59, 59, 999);
+
+    const daySpan = calculateDayDifference(event.startDate, event.endDate) + 1;
+
+    return Array.from({ length: daySpan }).map((_, i) => {
+      const currentDayStart = new Date(
+        new Date(DAY_START).setDate(new Date(DAY_START).getDate() + i)
+      );
+      const currentDayEnd = new Date(
+        new Date(DAY_END).setDate(new Date(DAY_END).getDate() + i)
+      );
+
+      const isFirstDay = i === 0;
+      const isLastDay = i === daySpan - 1;
+
+      return {
+        ...event,
+        displayStartTime: isFirstDay ? event.startDate : currentDayStart,
+        displayEndTime: isLastDay ? event.endDate : currentDayEnd,
+      };
+    });
+  }
+
   return {
     getDisplayDate,
     updateEvents,
@@ -172,6 +196,7 @@ const useAppState = () => {
     getSideCalDisplayDate,
     getEvents,
     getWeekEvents,
+    splitEvent,
   };
 };
 
