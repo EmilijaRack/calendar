@@ -1,10 +1,12 @@
 import React, { Fragment, useMemo } from "react";
-import { isToday } from "../dateHelpers";
 import { calculateDayDifference } from "../utils";
 import Event from "./Event";
+import MainCalendarHeader from "./MainCalendarHeader";
 
 const DAYS_IN_A_WEEK = 7;
 const HOURS_IN_A_DAY = 24;
+const MAIN_CALENDAR_COLUMNS = Array.from({ length: HOURS_IN_A_DAY });
+const MAIN_CALENDAR_ROWS = Array.from({ length: DAYS_IN_A_WEEK });
 
 const splitEvent = (event: Event): SplitEvent[] => {
   const DAY_START = new Date(event.startDate).setHours(0, 0, 0, 0);
@@ -45,10 +47,6 @@ const MainCalendar = ({
   events: Event[];
   onDeleteEvent: (event: Event) => void;
 }) => {
-  const hoursInADay = useMemo(() => new Array(HOURS_IN_A_DAY).fill({}), []);
-
-  const daysInAWeek = useMemo(() => new Array(DAYS_IN_A_WEEK).fill({}), []);
-
   const weekStartDate = new Date(displayDate.getTime());
   weekStartDate.setDate(displayDate.getDate() - displayDate.getDay());
 
@@ -77,55 +75,16 @@ const MainCalendar = ({
 
   return (
     <section className="main-calendar">
-      <ul className="main-calendar__header">
-        <li className="timeline__cell timeline__cell--flex-end">GMT+03</li>
-        <li className="main-calendar__vertical-block--small"></li>
-        {new Array(DAYS_IN_A_WEEK).fill({}).map((_, index) => {
-          return (
-            <li className="week-days__cells" key={index}>
-              <p className="week-days__cells--p">
-                {new Date(
-                  displayDate.getFullYear(),
-                  displayDate.getMonth(),
-                  displayDate.getDate() - displayDate.getDay() + index
-                )
-                  .toLocaleString("default", {
-                    weekday: "short",
-                  })
-                  .toLocaleUpperCase()}
-              </p>
-              <button
-                className={`week-days__cells--h1 ${
-                  isToday(
-                    new Date(
-                      displayDate.getFullYear(),
-                      displayDate.getMonth(),
-                      displayDate.getDate() - displayDate.getDay() + index
-                    )
-                  )
-                    ? "current-day-styling"
-                    : ""
-                } `}
-              >
-                {new Date(
-                  displayDate.getFullYear(),
-                  displayDate.getMonth(),
-                  displayDate.getDate() - displayDate.getDay() + index
-                ).getDate()}
-              </button>
-            </li>
-          );
-        })}
-      </ul>
+      <MainCalendarHeader displayDate={displayDate} />
       <ul className="main-calendar__body">
-        {hoursInADay.map((_, i) => {
+        {MAIN_CALENDAR_COLUMNS.map((_, i) => {
           return (
             <Fragment key={i}>
               <li className="timeline__cell">
                 <p>{i + 1} AM</p>
               </li>
               <li className="main-calendar__horizontal-block"></li>
-              {daysInAWeek.map((_, j) => {
+              {MAIN_CALENDAR_ROWS.map((_, j) => {
                 return (
                   <li className="main-calendar__body__cells" key={j}>
                     {weekEvents
