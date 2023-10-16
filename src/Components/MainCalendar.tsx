@@ -1,78 +1,22 @@
-import React, { Fragment, useMemo } from "react";
-import { calculateDayDifference } from "../utils";
+import React, { Fragment } from "react";
 import Event from "./Event";
 import MainCalendarHeader from "./MainCalendarHeader";
+import { SplitEvent } from "../utils";
 
 const DAYS_IN_A_WEEK = 7;
 const HOURS_IN_A_DAY = 24;
 const MAIN_CALENDAR_COLUMNS = Array.from({ length: HOURS_IN_A_DAY });
 const MAIN_CALENDAR_ROWS = Array.from({ length: DAYS_IN_A_WEEK });
 
-const splitEvent = (event: Event): SplitEvent[] => {
-  const DAY_START = new Date(event.startDate).setHours(0, 0, 0, 0);
-  const DAY_END = new Date(event.startDate).setHours(23, 59, 59, 999);
-
-  const daySpan = calculateDayDifference(event.startDate, event.endDate) + 1;
-
-  return Array.from({ length: daySpan }).map((_, i) => {
-    const currentDayStart = new Date(
-      new Date(DAY_START).setDate(new Date(DAY_START).getDate() + i)
-    );
-    const currentDayEnd = new Date(
-      new Date(DAY_END).setDate(new Date(DAY_END).getDate() + i)
-    );
-
-    const isFirstDay = i === 0;
-    const isLastDay = i === daySpan - 1;
-
-    return {
-      ...event,
-      displayStartTime: isFirstDay ? event.startDate : currentDayStart,
-      displayEndTime: isLastDay ? event.endDate : currentDayEnd,
-    };
-  });
-};
-
-export type SplitEvent = Event & {
-  displayStartTime: Date;
-  displayEndTime: Date;
-};
-
 const MainCalendar = ({
   displayDate,
-  events,
+  weekEvents,
   onDeleteEvent,
 }: {
   displayDate: Date;
-  events: Event[];
+  weekEvents: SplitEvent[];
   onDeleteEvent: (event: Event) => void;
 }) => {
-  const weekStartDate = new Date(displayDate.getTime());
-  weekStartDate.setDate(displayDate.getDate() - displayDate.getDay());
-
-  const weekEndDate = new Date(displayDate.getTime());
-  weekEndDate.setDate(weekEndDate.getDate() + 6 - displayDate.getDay());
-
-  const weekEvents = useMemo(
-    () =>
-      events
-        .filter((event) => {
-          return (
-            event.startDate <= weekEndDate && event.endDate >= weekStartDate
-          );
-        })
-        .reduce((acc, event) => {
-          return [...acc, ...splitEvent(event)];
-        }, [] as SplitEvent[])
-        .filter((event) => {
-          return (
-            event.displayStartTime <= weekEndDate &&
-            event.displayEndTime >= weekStartDate
-          );
-        }),
-    [events, displayDate]
-  );
-
   return (
     <section className="main-calendar">
       <MainCalendarHeader displayDate={displayDate} />
