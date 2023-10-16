@@ -12,7 +12,6 @@ export const getTimeError = ({
   endTime?: Date;
 }) => {
   if (endTime && startTime && endTime <= startTime) {
-    debugger;
     return "The endTime should be after the startTime";
   }
 };
