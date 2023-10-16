@@ -1,8 +1,8 @@
 import { Event } from "./event.js";
-import { useReducer, Reducer, useCallback } from "react";
+import { useReducer, Reducer, useCallback, useMemo } from "react";
 import { NavDirection } from "./commonTypes.js";
 import { unreachable } from "./utils.js";
-import { SplitEvent } from "./Components/MainCalendar.js";
+import { splitEvent, SplitEvent } from "./utils.js";
 
 interface initialState {
   displayDate: Date;
@@ -106,6 +106,32 @@ const useAppState = () => {
     return state.events;
   }, [state.events]);
 
+  const weekStartDate = new Date(getDisplayDate().getTime());
+  weekStartDate.setDate(getDisplayDate().getDate() - getDisplayDate().getDay());
+
+  const weekEndDate = new Date(getDisplayDate().getTime());
+  weekEndDate.setDate(weekEndDate.getDate() + 6 - getDisplayDate().getDay());
+
+  const getWeekEvents = useMemo(
+    () =>
+      getEvents()
+        .filter((event) => {
+          return (
+            event.startDate <= weekEndDate && event.endDate >= weekStartDate
+          );
+        })
+        .reduce((acc, event) => {
+          return [...acc, ...splitEvent(event)];
+        }, [] as SplitEvent[])
+        .filter((event) => {
+          return (
+            event.displayStartTime <= weekEndDate &&
+            event.displayEndTime >= weekStartDate
+          );
+        }),
+    [getEvents(), getDisplayDate()]
+  );
+
   const getSideCalDisplayDate = () => {
     return state.displaySideCalDate;
   };
@@ -145,6 +171,7 @@ const useAppState = () => {
     changeMonth,
     getSideCalDisplayDate,
     getEvents,
+    getWeekEvents,
   };
 };
 

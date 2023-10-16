@@ -96,7 +96,7 @@ export const App = () => {
 
         <MainCalendar
           displayDate={appFunctions.getDisplayDate()}
-          events={appFunctions.getEvents()}
+          weekEvents={appFunctions.getWeekEvents}
           onDeleteEvent={confirmToDelete}
         />
       </main>
